@@ -10,5 +10,8 @@ import lombok.Getter;
 public class StudentResponse {
     private Long id;
     private String name;
-    private Long age;
+    private Long studentNumber;
+    private String phoneNumber;
+    private String userId;
+    private String password;
 }

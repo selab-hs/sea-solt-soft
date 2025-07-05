@@ -21,32 +21,59 @@ public class Student {
     @Column(name = "student_name", nullable = true, length = 50)
     private String name;
 
-    @Column(name = "student_age", nullable = true, length = 3)
-    private Long age;
+    @Column(name = "student_number", nullable = true, length = 10)
+    private Long studentNumber;
+
+    @Column(name = "student_phone", nullable = true, length = 11)
+    private String phoneNumber;
+
+    @Column(name = "user_id", nullable = true, length = 25)
+    private String userId;
+
+    @Column(name = "user_password", nullable = false, length = 50)
+    private String password;
+
+    @Column(name = "user_email", nullable = true, length = 50)
+    private String email;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Student(String name, Long age) {
+    public Student(String name, Long studentNumber, String phoneNumber, String userId, String password, String email) {
         this.name = name;
-        this.age = age;
+        this.studentNumber = studentNumber;
+        this.phoneNumber = phoneNumber;
+        this.userId = userId;
+        this.password = password;
+        this.email = email;
     }
 
     public static Student toEntity(StudentCreateRequest request){
         return Student.builder()
                 .name(request.getName())
-                .age(request.getAge())
+                .studentNumber(request.getStudentNumber())
+                .phoneNumber(request.getPhoneNumber())
+                .userId(request.getUserId())
+                .password(request.getPassword())
+                .email(request.getEmail())
                 .build();
     }
 
     public void update(StudentUpdateRequest request){
         this.name = request.getName();
-        this.age = request.getAge();
+        this.studentNumber = request.getStudentNumber();
+        this.phoneNumber = request.getPhoneNumber();
+        this.userId = request.getUserId();
+        this.password = request.getPassword();
+        this.email = request.getEmail();
     }
 
     public StudentResponse toResponse(){
         return StudentResponse.builder()
                 .id(this.id)
                 .name(this.name)
-                .age(this.age)
+                .studentNumber(this.studentNumber)
+                .phoneNumber(this.phoneNumber)
+                .userId(this.userId)
+                .password(this.password)
                 .build();
     }
 }
