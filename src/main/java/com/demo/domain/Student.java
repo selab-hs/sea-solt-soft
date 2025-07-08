@@ -27,21 +27,21 @@ public class Student {
     @Column(name = "student_phone", nullable = true, length = 11)
     private String phoneNumber;
 
-    @Column(name = "user_id", nullable = true, length = 25)
-    private String userId;
+    @Column(name = "login_id", nullable = true, length = 25)
+    private String loginId;
 
-    @Column(name = "user_password", nullable = false, length = 50)
+    @Column(name = "login_password", nullable = false, length = 50)
     private String password;
 
-    @Column(name = "user_email", nullable = true, length = 50)
+    @Column(name = "login_email", nullable = true, length = 50)
     private String email;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Student(String name, Long studentNumber, String phoneNumber, String userId, String password, String email) {
+    public Student(String name, Long studentNumber, String phoneNumber, String loginId, String password, String email) {
         this.name = name;
         this.studentNumber = studentNumber;
         this.phoneNumber = phoneNumber;
-        this.userId = userId;
+        this.loginId = loginId;
         this.password = password;
         this.email = email;
     }
@@ -51,7 +51,7 @@ public class Student {
                 .name(request.getName())
                 .studentNumber(request.getStudentNumber())
                 .phoneNumber(request.getPhoneNumber())
-                .userId(request.getUserId())
+                .loginId(request.getLoginId())
                 .password(request.getPassword())
                 .email(request.getEmail())
                 .build();
@@ -61,7 +61,7 @@ public class Student {
         this.name = request.getName();
         this.studentNumber = request.getStudentNumber();
         this.phoneNumber = request.getPhoneNumber();
-        this.userId = request.getUserId();
+        this.loginId = request.getLoginId();
         this.password = request.getPassword();
         this.email = request.getEmail();
     }
@@ -72,8 +72,7 @@ public class Student {
                 .name(this.name)
                 .studentNumber(this.studentNumber)
                 .phoneNumber(this.phoneNumber)
-                .userId(this.userId)
-                .password(this.password)
+                .loginId(this.loginId)
                 .build();
     }
 }
