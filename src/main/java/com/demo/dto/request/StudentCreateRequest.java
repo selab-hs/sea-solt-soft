@@ -3,9 +3,8 @@ package com.demo.dto.request;
 import lombok.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class StudentCreateRequest {
     private String name;
     private Long studentNumber;
@@ -14,14 +13,7 @@ public class StudentCreateRequest {
     private String password;
     private String email;
 
-    public StudentCreateRequest withEncodedPassword(String encodedPassword) {
-        return StudentCreateRequest.builder()
-                .name(this.name)
-                .studentNumber(this.studentNumber)
-                .phoneNumber(this.phoneNumber)
-                .loginId(this.loginId)
-                .password(encodedPassword)
-                .email(this.email)
-                .build();
+    public void updatePassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }

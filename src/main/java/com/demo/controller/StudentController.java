@@ -17,8 +17,8 @@ public class StudentController {
     private final StudentService studentService;
 
     @PostMapping
-        public ResponseEntity<?> create(@RequestBody StudentCreateRequest request) {
-        var response = studentService.encryptionPassword(request);
+    public ResponseEntity<?> create(@RequestBody StudentCreateRequest request) {
+        var response = studentService.create(request);
         return ResponseEntity.ok(response);
     }
 }

@@ -26,14 +26,6 @@ public class StudentService {
         return entity.toResponse();
     }
 
-    @Transactional
-    public StudentResponse encryptionPassword(StudentCreateRequest request) {
-        String encoded = passwordEncoder.encode(request.getPassword());
-        Student entity = Student.toEntity(request.withEncodedPassword(encoded));
-        studentRepository.save(entity);
-        return entity.toResponse();
-    }
-
     @Transactional(readOnly = true)
     public StudentResponse findById(Long id) {
         return studentRepository.findById(id).orElse(null).toResponse();

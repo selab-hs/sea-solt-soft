@@ -1,5 +1,6 @@
 package com.demo.domain;
 
+import com.demo.converter.PasswordEncryptConverter;
 import com.demo.dto.request.StudentCreateRequest;
 import com.demo.dto.response.StudentResponse;
 import com.demo.dto.request.StudentUpdateRequest;
@@ -8,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,6 +33,7 @@ public class Student {
     private String loginId;
 
     @Column(name = "login_password", nullable = false, length = 50)
+    @Convert(converter = PasswordEncryptConverter.class) // 암호화 자동 변환기
     private String password;
 
     @Column(name = "login_email", nullable = true, length = 50)
