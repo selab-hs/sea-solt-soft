@@ -27,14 +27,9 @@ public class WebSecurityConfig {
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/public/**").permitAll()
                         .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .permitAll()
-                );
+                ).formLogin(form -> form.loginPage("/login").permitAll());
+
+        // POST login -> UserDetailsService 로그인 요청을 가로채서 로그인을 해서 세션에 저장해줘
         return http.build();
     }
 
