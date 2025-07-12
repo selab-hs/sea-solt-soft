@@ -1,8 +1,9 @@
 package com.demo.converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 @Converter(autoApply = true)
 public class PasswordEncryptConverter implements AttributeConverter<String, String> {
@@ -11,6 +12,9 @@ public class PasswordEncryptConverter implements AttributeConverter<String, Stri
 
     @Override
     public String convertToDatabaseColumn(String attribute) {
+        if (attribute == null) {
+            return null;
+        }
         return passwordEncoder.encode(attribute); //비번 암호화
     }
 

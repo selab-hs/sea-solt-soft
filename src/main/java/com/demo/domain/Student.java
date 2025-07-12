@@ -5,14 +5,14 @@ import com.demo.dto.request.StudentCreateRequest;
 import com.demo.dto.response.StudentResponse;
 import com.demo.dto.request.StudentUpdateRequest;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@Getter
 @ToString
 public class Student {
     @Id
@@ -32,7 +32,7 @@ public class Student {
     @Column(name = "login_id", nullable = true, length = 25)
     private String loginId;
 
-    @Column(name = "login_password", nullable = false, length = 50)
+    @Column(name = "login_password", nullable = true, length = 50)
     @Convert(converter = PasswordEncryptConverter.class) // 암호화 자동 변환기
     private String password;
 
