@@ -1,0 +1,138 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f3e9ff;
+  color: #333;
+  font-family: Arial, sans-serif;
+}
+
+/* 상단 영역 */
+.top-section {
+  background-color: #6a0dad;
+  padding: 20px 10px;
+  text-align: center;
+  position: relative;
+}
+
+/* 로고 중앙 정렬 */
+.logo-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
+}
+
+.logo-text {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* 메뉴 가로 정렬 (데스크탑) */
+.main-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.main-nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  transition: opacity 0.2s ease;
+}
+
+.main-nav a:hover {
+  opacity: 0.7;
+}
+
+/* 햄버거 버튼 - 모바일 전용 */
+.menu-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+  display: none;
+}
+
+/* 콘텐츠 영역 */
+.main-content {
+  padding: 40px 20px;
+  flex-grow: 1;
+}
+
+/* 푸터 */
+.main-footer {
+  background-color: #4b0082;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: auto;
+}
+
+/* 모바일 전용 스타일 */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .main-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100%;
+    background-color: white;
+    flex-direction: column;
+    padding: 80px 20px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 1101;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+  }
+
+  .main-nav a {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .main-nav.active {
+    transform: translateX(0%);
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 1100;
+  }
+
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
