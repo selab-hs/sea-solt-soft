@@ -28,14 +28,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
-    implementation 'mysql:mysql-connector-java:8.0.26'
+    implementation 'javax.persistence:javax.persistence-api:2.2'
     compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    //Tthymeleaf
+    //Thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
