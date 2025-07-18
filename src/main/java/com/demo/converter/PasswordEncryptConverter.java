@@ -2,13 +2,16 @@ package com.demo.converter;
 
 import jakarta.persistence.Converter;
 import jakarta.persistence.AttributeConverter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
-
-@Converter(autoApply = true)
+@Component
+@Converter
+@RequiredArgsConstructor
 public class PasswordEncryptConverter implements AttributeConverter<String, String> {
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public String convertToDatabaseColumn(String attribute) {
