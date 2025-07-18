@@ -22,14 +22,17 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/public/**").permitAll()
+        http.
+                authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
-                ).formLogin(form -> form.loginPage("/login").permitAll());
+        )
+                .formLogin(form -> form
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/home", true)
+                    .permitAll());
 
-        // POST login -> UserDetailsService 로그인 요청을 가로채서 로그인을 해서 세션에 저장해줘
+        // POST login -> UserDetailsService 로그인 요청을 가로채서 로그인을 해서 세션에 저장해준다
         return http.build();
     }
 
