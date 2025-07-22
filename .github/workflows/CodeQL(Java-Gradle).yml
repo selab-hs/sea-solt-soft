@@ -12,11 +12,11 @@ on:
   push:
     branches:
       - "main"        # 'main' 브랜치에 푸시될 때
-      - "develop"     # 'develop' 브랜치에 푸시될 때
+      - "dev"         # 'dev' 브랜치에 푸시될 때
   pull_request:
     branches:
       - "main"        # 'main' 브랜치에 PR될 때
-      - "develop"     # 'develop' 브랜치에 PR될 때
+      - "dev"         # 'dev' 브랜치에 PR될 때
     # 만약 스케줄로 검사하지 않아도 된다면 주석(또는 삭제)처리 해도 됨
     #schedule:
     #- cron: '0 0 * * 0' # 매주 일요일 새벽 0시 0분 (UTC 기준)

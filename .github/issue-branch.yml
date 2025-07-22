@@ -4,7 +4,7 @@
 branchName: '${issue.number}'
 
 # 새로운 브랜치가 파생될 기본 브랜치를 지정합니다.
-defaultBranch: 'develop'
+defaultBranch: 'dev'
 
 # 다양한 유형의 브랜치에 대한 설정을 정의합니다.
 branches:
@@ -16,27 +16,27 @@ branches:
   # 'feature' 라벨이 있는 이슈에 대한 브랜치 설정
   - label: 'feature'
     prefix: 'feature/'
-    name: 'develop'
+    name: 'dev'
 
   # 'docs' (문서) 라벨이 있는 이슈에 대한 브랜치 설정
   - label: 'docs'
     prefix: 'docs/'
-    name: 'develop'
+    name: 'dev'
 
   # 'test' 라벨이 있는 이슈에 대한 브랜치 설정
   - label: 'test'
     prefix: 'test/'
-    name: 'develop'
+    name: 'dev'
 
   # 'fix' (버그 수정) 라벨이 있는 이슈에 대한 브랜치 설정
   - label: 'fix'
     prefix: 'fix/'
-    name: 'develop'
+    name: 'dev'
 
   # 'enhancement' (기능 개선) 라벨이 있는 이슈에 대한 브랜치 설정
   - label: 'enhancement'
     prefix: 'enhancement/'
-    name: 'develop'
+    name: 'dev'
 
 # 브랜치가 성공적으로 생성된 후 이슈에 남길 댓글 메시지입니다.
 # `${branchName}`은 실제 브랜치 이름으로, `${issue.title}`은 이슈 제목으로 대체됩니다.
