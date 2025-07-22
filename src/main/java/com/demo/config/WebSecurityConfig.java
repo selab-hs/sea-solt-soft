@@ -22,11 +22,10 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.
-                authorizeHttpRequests(authz -> authz
+        http
+                .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/login").permitAll()
-                        .anyRequest().authenticated()
-        )
+                        .anyRequest().authenticated())
                 .formLogin(form -> form
                     .loginPage("/login")
                     .defaultSuccessUrl("/home", true)
@@ -36,6 +35,8 @@ public class WebSecurityConfig {
         return http.build();
     }
 
+
+    //회원가입 기능 구현시 삭제할 메소드 입니다
     @Bean
     public UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();

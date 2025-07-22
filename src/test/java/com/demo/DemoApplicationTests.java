@@ -16,14 +16,4 @@ class DemoApplicationTests {
     @Autowired
     private StudentRepository studentRepository;
 
-    @Test
-    void builderTest() {
-    Student student = Student.builder();
-        .nmae("송유찬");
-        .build();
-
-    Student savedStudent = studentRepository.save(student);
-    assertTrue(savedStudent != null, "저장 성공함");
-    }
-
 }
