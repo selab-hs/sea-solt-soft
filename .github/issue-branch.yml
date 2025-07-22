@@ -28,8 +28,8 @@ branches:
     prefix: 'test/'
     name: 'dev'
 
-  # 'fix' (버그 수정) 라벨이 있는 이슈에 대한 브랜치 설정
-  - label: 'fix'
+  # 'bug' (버그 수정) 라벨이 있는 이슈에 대한 브랜치 설정
+  - label: 'bug'
     prefix: 'fix/'
     name: 'dev'
 
@@ -37,6 +37,7 @@ branches:
   - label: 'enhancement'
     prefix: 'enhancement/'
     name: 'dev'
+  
 
 # 브랜치가 성공적으로 생성된 후 이슈에 남길 댓글 메시지입니다.
 # `${branchName}`은 실제 브랜치 이름으로, `${issue.title}`은 이슈 제목으로 대체됩니다.
