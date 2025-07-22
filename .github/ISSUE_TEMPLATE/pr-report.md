@@ -1,5 +1,5 @@
 ---
-name: Feature request
+name: PR report
 about: PR 리포트 템플릿
 title: ''
 labels: ''
