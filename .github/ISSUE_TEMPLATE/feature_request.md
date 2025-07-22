@@ -1,8 +1,8 @@
 ---
 name: Feature request
 about: 기능 리포트 템플릿
-title: ''
-labels: ''
+title: "[Feat]"
+labels: feature
 assignees: ''
 
 ---
