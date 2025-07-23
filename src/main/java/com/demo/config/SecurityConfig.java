@@ -69,8 +69,9 @@ public class SecurityConfig {
                             .authenticationEntryPoint(jwtAuthenticationEntryPoint);
                 })
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers("/**", "/swagger-ui.html", "/api/v1/auth/login", "/api/v1/auth/register").permitAll()
-                            .requestMatchers(PathRequest.toH2Console()).permitAll()
+                    request
+                            .requestMatchers("/api/v1/auth/login", "api/v1/auth/register").permitAll() //권한 없이도 요청 가능한 API
+                            .requestMatchers("/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
