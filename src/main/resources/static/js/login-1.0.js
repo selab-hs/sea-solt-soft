@@ -1,36 +1,78 @@
-// login.js 
-// 로그인 버튼을 눌렀을 때 실행되는 JavaScript 코드다.
+// login-1.1.js - 로그인 폼 처리 스크립트 (개선 버전)
 
-//  로그인 버튼을 찾아서 클릭 이벤트를 등록한다.
-document.getElementById('login-btn').addEventListener('click', () => {
-  //  입력된 아이디와 비밀번호 값을 가져온다.
-  const id = document.getElementById('username').value; // 아이디 입력값이다.
-  const pw = document.getElementById('password').value; // 비밀번호 입력값이다.
+// 로그인 폼 제출 시 이벤트 리스너 등록
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault(); // 기본 폼 제출(새로고침) 동작 방지
 
-  //  백엔드 서버로 로그인 정보를 보낼 준비를 한다.
-  fetch('http://localhost:8080/api/login', { // 서버 주소 (백엔드에서 만든 API 주소다.)
-    method: 'POST', // POST 방식으로 요청한다. (로그인 정보는 숨겨야 하므로 사용한다.)
-    headers: { 
-      'Content-Type': 'application/json' // JSON 형식으로 보낸다고 알린다.
-    },
-    body: JSON.stringify({ // 보낼 데이터를 JSON 문자열로 변환한다.
-      username: id, 
-      password: pw
-    })
-  })
-    //  응답을 받아서 처리한다.
-    .then(res => res.json()) // 응답을 JSON 형태로 변환한다.
-    .then(data => {
-      //  로그인 성공 여부를 확인하고 처리한다.
-      if (data.success) {
-        alert('로그인 성공!'); // 성공 시 알림창을 띄운다.
-        // 페이지 이동이나 토큰 저장 로직을 여기에 추가할 수 있다.
-      } else {
-        document.getElementById('message').textContent = '로그인 실패'; // 실패 메시지를 출력한다.
-      }
-    })
-    .catch(err => { // 서버 오류나 네트워크 문제가 발생했을 때 실행된다.
-      console.error('에러:', err);
-      document.getElementById('message').textContent = '서버 오류'; // 오류 메시지를 출력한다.
+  // ✅ 입력값 가져오기
+  const id = document.getElementById('username').value.trim();
+  const pw = document.getElementById('password').value.trim();
+  const message = document.getElementById('message');
+  const loginBtn = document.getElementById('login-btn');
+
+  // 메시지 초기화
+  message.textContent = '';
+  message.style.color = 'red';
+
+  // ✅ 빈 칸 검사
+  if (!id || !pw) {
+    message.textContent = '아이디와 비밀번호를 모두 입력해주세요.';
+    return;
+  }
+
+  // ✅ 로그인 중 버튼 비활성화
+  loginBtn.disabled = true;
+  loginBtn.textContent = '로그인 중...';
+
+  try {
+    // ✅ 서버로 로그인 요청 전송
+    const res = await fetch('http://localhost:8080/api/v1/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        loginId: id,   // 서버 요구 필드명에 맞춰 전송
+        password: pw
+      })
     });
+
+    // ✅ 서버 응답 처리
+    if (res.ok) {
+      // JWT 토큰은 응답 헤더의 Authorization에 포함됨
+      let token = res.headers.get('Authorization');
+
+      // "Bearer " 접두어 제거
+      if (token?.startsWith('Bearer ')) {
+        token = token.substring(7); // "Bearer " 길이 = 7
+      }
+
+      // 토큰이 있다면 localStorage에 저장
+      if (token) {
+        localStorage.setItem('jwtToken', token); // 향후 인증에 사용할 토큰 저장
+        alert('로그인 성공!');
+        window.location.href = '/dashboard.html'; // 로그인 후 이동
+      } else {
+        message.textContent = '로그인 실패: 토큰이 존재하지 않습니다.';
+      }
+    } else {
+      // 실패 응답: 에러 메시지 출력
+      const errorText = await res.text();
+      message.textContent = errorText || '로그인 실패: 아이디 또는 비밀번호를 확인해주세요.';
+    }
+
+  } catch (err) {
+    // 네트워크 오류 또는 서버 다운 등
+    console.error('서버 연결 오류:', err);
+    message.textContent = '서버 오류가 발생했습니다. 나중에 다시 시도해주세요.';
+  } finally {
+    // 버튼 상태 복원
+    loginBtn.disabled = false;
+    loginBtn.textContent = '로그인';
+  }
+});
+
+// ✅ 회원가입 버튼 클릭 시 회원가입 페이지로 이동
+document.querySelector('.signup-button').addEventListener('click', () => {
+  window.location.href = '../signup/signup-1.0.html';
 });
