@@ -70,8 +70,19 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(request -> {
                     request
-                            .requestMatchers("/api/v1/auth/login", "api/v1/auth/register").permitAll() //권한 없이도 요청 가능한 API
-                            .requestMatchers("/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
+                            // 권한 없이 요청할 수 있는 API
+                            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register").permitAll()
+                            // Swagger 설정
+                            .requestMatchers(
+                                    "/api-docs/**",
+                                    "/swagger-ui.html",
+                                    "/swagger-ui/**",
+                                    "/swagger-resources/**",
+                                    "/webjars/**"
+                            ).permitAll()
+                            // 뷰 컨트롤러 추가 시 URL 추가
+                            .requestMatchers("/", "/sign-in").permitAll()
+                            .requestMatchers("/js/**", "/css/**").permitAll()
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
