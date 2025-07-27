@@ -71,7 +71,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> {
                     request
                             // 권한 없이 요청할 수 있는 API
-                            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register").permitAll()
+                            .requestMatchers(
+                                    "/api/v1/auth/login",
+                                    "/api/v1/auth/register"
+                                    // id중복확인 관련 추후에 추가예정 "/api/v1/auth/check-id"
+                            ).permitAll()
                             // Swagger 설정
                             .requestMatchers(
                                     "/api-docs/**",
@@ -81,7 +85,7 @@ public class SecurityConfig {
                                     "/webjars/**"
                             ).permitAll()
                             // 뷰 컨트롤러 추가 시 URL 추가
-                            .requestMatchers("/", "/sign-in").permitAll()
+                            .requestMatchers("/", "/sign-in","/sign-up").permitAll()
                             .requestMatchers("/js/**", "/css/**").permitAll()
                             .anyRequest().authenticated();
                 })
