@@ -1,10 +1,10 @@
-// login-1.1.js - 로그인 폼 처리 스크립트 (개선 버전)
+// login-1.0.js 로그인 폼 처리 스크립트
 
 // 로그인 폼 제출 시 이벤트 리스너 등록
 document.getElementById('login-form').addEventListener('submit', async (e) => {
   e.preventDefault(); // 기본 폼 제출(새로고침) 동작 방지
 
-  // ✅ 입력값 가져오기
+  //  입력값 가져오기
   const id = document.getElementById('username').value.trim();
   const pw = document.getElementById('password').value.trim();
   const message = document.getElementById('message');
@@ -14,18 +14,18 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
   message.textContent = '';
   message.style.color = 'red';
 
-  // ✅ 빈 칸 검사
+  //  빈 칸 검사
   if (!id || !pw) {
     message.textContent = '아이디와 비밀번호를 모두 입력해주세요.';
     return;
   }
 
-  // ✅ 로그인 중 버튼 비활성화
+  //  로그인 중 버튼 비활성화
   loginBtn.disabled = true;
   loginBtn.textContent = '로그인 중...';
 
   try {
-    // ✅ 서버로 로그인 요청 전송
+    //  서버로 로그인 요청 전송
     const res = await fetch('http://localhost:8080/api/v1/auth/login', {
       method: 'POST',
       headers: {
@@ -37,7 +37,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
       })
     });
 
-    // ✅ 서버 응답 처리
+    //  서버 응답 처리
     if (res.ok) {
       // JWT 토큰은 응답 헤더의 Authorization에 포함됨
       let token = res.headers.get('Authorization');
@@ -72,7 +72,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
   }
 });
 
-// ✅ 회원가입 버튼 클릭 시 회원가입 페이지로 이동
+//  회원가입 버튼 클릭 시 회원가입 페이지로 이동
 document.querySelector('.signup-button').addEventListener('click', () => {
-  window.location.href = '../signup/signup-1.0.html';
+  window.location.href = '/sign-up';
 });
