@@ -1,41 +1,52 @@
-<!-- signup.html -->
+<!-- 회원가입.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>회원가입</title>
-  <link rel="stylesheet" href="../../static/css/common.css" />
-  <link rel="stylesheet" href="../../static/css/signup-1.0.css" />
-  <script defer src="../../static/js/signup-1.0.js"></script> <!-- defer 적용 -->
+  <link rel="stylesheet" href="/css/common.css" />
+  <link rel="stylesheet" href="/css/signup-1.0.css" />
+  <script defer src="/js/signup-1.0.js"></script>
 </head>
 <body>
-  <div class="login-container">
-    <h2>회원가입</h2>
-    <form id="signupForm">
-      <label for="name">이름</label>
-      <input type="text" id="name" name="name" required />
+<div class="login-container">
+  <h2>회원가입</h2>
+  <form id="signupForm">
+    <label for="name">이름</label>
+    <input type="text" id="name" name="name" required />
 
-      <label for="studentId">학번</label>
-      <input type="text" id="studentId" name="studentId" required />
+    <label for="studentId">학번</label>
+    <input type="text" id="studentId" name="studentId" required />
 
-      <label for="phone">전화번호</label>
-      <input type="tel" id="phone" name="phone" required />
+    <label for="phone">전화번호</label>
+    <input type="tel" id="phone" name="phone" placeholder="숫자만입력하세요." required />
 
-      <label for="username">아이디</label>
+    <label for="username">아이디</label>
+    <div style="display: flex; align-items: center; gap: 8px;">
       <input type="text" id="username" name="username" required />
+      <button type="button" id="checkIdBtn">중복 확인</button>
+    </div>
+    <span id="checkIdMessage" style="font-size: 0.9em; color: #0077cc;"></span>
 
-      <label for="password">비밀번호</label>
+    <label for="password">비밀번호</label>
+    <div style="display: flex; align-items: center; gap: 8px;">
       <input type="password" id="password" name="password" required />
+      <button type="button" id="togglePwBtn">보기</button>
+    </div>
 
-      <label for="confirmPassword">비밀번호 확인</label>
+    <label for="confirmPassword">비밀번호 확인</label>
+    <div style="display: flex; align-items: center; gap: 8px;">
       <input type="password" id="confirmPassword" name="confirmPassword" required />
+      <button type="button" id="toggleConfirmPwBtn">보기</button>
+    </div>
 
-      <label for="email">이메일</label>
-      <input type="email" id="email" name="email" required />
+    <label for="email">이메일</label>
+    <input type="email" id="email" name="email" required />
 
-      <button type="submit" id="signup-btn">회원가입</button>
-      <p id="signupMessage"></p>
-    </form>
-  </div>
+    <button type="submit" id="signup-btn">회원가입</button>
+    <p id="signupMessage" style="color: red;"></p>
+  </form>
+</div>
 </body>
+</html>
