@@ -47,6 +47,10 @@ public class Student {
     )
     private Set<Authority> authorities = new HashSet<>();
 
+    private Set<Authority> authorityset() {
+        return authorities;
+    }
+
     @Builder(access = AccessLevel.PRIVATE)
     public Student(String name, Long studentNumber, String phoneNumber, String loginId, String password, String email) {
         this.name = name;
@@ -86,6 +90,15 @@ public class Student {
                 .userId(this.loginId)
                 .password(this.password)
                 .build();
+    }
+
+    //권한 추가 메소드들
+    public void assignRole(String role) {
+        if ("ROLE_USER".equals(role)) {
+            this.addAuthority(new Authority("ROLE_USER"));
+        } else if ("ROLE_ADMIN".equals(role)) {
+            this.addAuthority(new Authority("ROLE_ADMIN"));
+        }
     }
 
     public void addAuthority(Authority authority) {

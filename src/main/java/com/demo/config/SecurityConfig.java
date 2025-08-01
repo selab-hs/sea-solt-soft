@@ -72,6 +72,7 @@ public class SecurityConfig {
                     request
                             .requestMatchers("/api/v1/auth/login", "api/v1/auth/register").permitAll() //권한 없이도 요청 가능한 API
                             .requestMatchers("/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
+                            .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // 관리자(ADMIN) 역할을 가진 사용자만 접근 가능
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {

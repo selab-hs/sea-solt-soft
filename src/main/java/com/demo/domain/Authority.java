@@ -18,10 +18,16 @@ import lombok.*;
 @Entity
 @Table(name = "authority")
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Authority {
     @Id
     @Column(name = "authority_name", length = 50)
     private String authorityName;
+
+    public  Authority(String authorityName) {
+        this.authorityName = authorityName;
+    }
+
+    public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
 }

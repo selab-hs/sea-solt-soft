@@ -1,5 +1,6 @@
 package com.demo.service;
 
+import com.demo.domain.Authority;
 import com.demo.domain.Student;
 import com.demo.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,12 @@ public class CustomLoginService implements UserDetailsService {
         Student student = repo.findOneWithAuthoritiesByLoginId(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
         log.info(student.toString());
+
+        //ADMIN 권한 로직입니다
+        if (student.getLoginId().equals("admin")) {
+            student.addAuthority(new Authority("ROLE_ADMIN"));
+        }
+
         return createUser(student);
     }
 
