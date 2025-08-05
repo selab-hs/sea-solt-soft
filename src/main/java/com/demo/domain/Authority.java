@@ -28,6 +28,7 @@ public class Authority {
         this.authorityName = authorityName;
     }
 
-    public static final String ROLE_USER = "ROLE_USER";
-    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+    public static Authority createRole(String roleName) {
+        return new Authority(roleName);
+    }
 }

@@ -6,6 +6,7 @@ import com.demo.dto.response.PostResponse;
 import com.demo.domain.Post;
 import com.demo.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.PageRequest;
@@ -29,29 +30,32 @@ public class PostApiController {
 
     @GetMapping("/{postId}")
     public PostResponse getPost(@PathVariable Long postId) {
-        return postService.getPost(postId).toResponse();
+        return postService.getPost(postId);
     }
 
     @PutMapping("/{postId}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public PostResponse updatePost(@PathVariable Long postId, @RequestBody PostUpdateRequest request, @RequestParam String studentId) {
         return postService.updatePost(postId, request, studentId);
     }
 
     @DeleteMapping("/{postId}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public void deletePost(@PathVariable Long postId, @RequestParam String studentId) {
         postService.deletePost(postId, studentId);
     }
 
     @GetMapping
-    public List<PostResponse> getPostList(@RequestParam(required = false) String search,
-                                          @RequestParam int page,
-                                          @RequestParam int size) {
+    public Page<PostResponse> getPostList(@RequestParam(required = false) String search,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);  // 페이지 정보 설정
-        List<Post> posts = (search == null) ? postService.getAllPosts(pageable).getContent() :
-                postService.searchPosts(search, pageable).getContent();  // 검색어가 없으면 전체 게시글 조회, 있으면 검색된 게시글 조회
-        return posts.stream().map(Post::toResponse).collect(Collectors.toList());  // 게시글을 PostResponse로 변환하여 반환
+
+        Page<Post> postsPage = (search == null)
+                ? postService.getAllPosts(pageable)
+                : postService.searchPosts(search, pageable);
+
+        return postsPage.map(post -> post.toResponse());
     }
 
     private boolean isAdmin(String studentId) {

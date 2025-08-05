@@ -47,8 +47,13 @@ public class Student {
     )
     private Set<Authority> authorities = new HashSet<>();
 
-    private Set<Authority> authorityset() {
-        return authorities;
+    public void assignRole(String role) {
+        Authority authority = new Authority(role); // Authority 객체를 엔티티 내부에서 생성
+        this.addAuthority(authority);  // 권한을 추가
+    }
+
+    public void addAuthority(Authority authority) {
+        this.authorities.add(authority);
     }
 
     @Builder(access = AccessLevel.PRIVATE)
@@ -92,16 +97,8 @@ public class Student {
                 .build();
     }
 
-    //권한 추가 메소드들
-    public void assignRole(String role) {
-        if ("ROLE_USER".equals(role)) {
-            this.addAuthority(new Authority("ROLE_USER"));
-        } else if ("ROLE_ADMIN".equals(role)) {
-            this.addAuthority(new Authority("ROLE_ADMIN"));
-        }
-    }
-
-    public void addAuthority(Authority authority) {
-        this.authorities.add(authority);
+    public boolean hasRoleAdmin() {
+        return this.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthorityName().equals("ROLE_ADMIN"));
     }
 }

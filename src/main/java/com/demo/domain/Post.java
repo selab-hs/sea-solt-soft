@@ -50,6 +50,15 @@ public class Post {
         this.description = request.getDescription();
     }
 
+    public static Post createPost(String title, String content, String description, Student student) {
+        Post post = new Post();
+        post.title = title;
+        post.content = content;
+        post.description = description;
+        post.student = student;
+        return post;
+    }
+
     public PostResponse toResponse() {
         return new PostResponse(
                 this.id,
@@ -66,9 +75,5 @@ public class Post {
         this.content = content;
         this.description = description;
         this.student = student;
-    }
-
-    public String getStudentId() {
-        return this.student != null ? this.student.getLoginId() : null;
     }
 }

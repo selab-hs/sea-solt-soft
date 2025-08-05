@@ -45,11 +45,6 @@ public class CustomLoginService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
         log.info(student.toString());
 
-        //ADMIN 권한 로직입니다
-        if (student.getLoginId().equals("admin")) {
-            student.addAuthority(new Authority("ROLE_ADMIN"));
-        }
-
         return createUser(student);
     }
 
@@ -77,5 +72,15 @@ public class CustomLoginService implements UserDetailsService {
         return student.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
+    }
+
+    public UserDetails createnewUser(Student student) {
+        if ("admin".equals(student.getLoginId())) {
+            student.addAuthority(new Authority("ROLE_ADMIN"));
+        } else {
+            student.addAuthority(new Authority("ROLE_USER"));
+        }
+
+        return createUser(student);
     }
 }
