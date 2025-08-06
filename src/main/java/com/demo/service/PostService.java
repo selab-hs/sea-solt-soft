@@ -15,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import static com.demo.domain.QStudent.student;
-
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -59,7 +57,7 @@ public class PostService {
         Post post = postRepository.findById(postId).
                 orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다"));
 
-        if (post.getStudent() == null || !post.getStudent().getLoginId().equals(studentId) && !isAdmin(studentId)) {
+        if (post.getStudent() == null || !post.getStudent().getLoginId().equals(studentId) && isAdmin(studentId)) {
             throw new UnauthorizedAccessException("권한이 없습니다");
         }
 
@@ -71,14 +69,17 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다"));
 
-        if (post.getStudent() == null || !post.getStudent().getLoginId().equals(studentId) && !isAdmin(studentId)) {
+        if (post.getStudent() == null || !post.getStudent().getLoginId().equals(studentId) && isAdmin(studentId)) {
             throw new UnauthorizedAccessException("권한이 없습니다");
         }
 
         postRepository.delete(post);
     }
 
-    public boolean isAdmin(Student student) {
-        return student.hasRoleAdmin();
+    public boolean isAdmin(String studentId) {
+        Student student = studentRepository.findByLoginId(studentId)
+                .orElseThrow(() -> new NotFoundStudentException("학생을 찾을 수 없습니다."));
+
+        return !student.hasRoleAdmin();
     }
 }
