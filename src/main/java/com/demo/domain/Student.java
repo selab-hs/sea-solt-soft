@@ -47,9 +47,8 @@ public class Student {
     )
     private Set<Authority> authorities = new HashSet<>();
 
-    public void assignRole(String role) {
-        Authority authority = new Authority(role); // Authority 객체를 엔티티 내부에서 생성
-        this.addAuthority(authority);  // 권한을 추가
+    public void addRole(Authority authority) {
+        this.authorities.add(authority);
     }
 
     public void addAuthority(Authority authority) {

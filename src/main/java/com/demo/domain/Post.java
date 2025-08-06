@@ -65,8 +65,8 @@ public class Post {
                 this.title,
                 this.content,
                 this.description,
-                this.createdAt.toString(),
-                this.updatedAt.toString()
+                this.createdAt != null ? this.createdAt.toString() : null,
+                this.updatedAt != null ? this.updatedAt.toString() : null
         );
     }
 

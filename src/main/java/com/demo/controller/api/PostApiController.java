@@ -51,14 +51,10 @@ public class PostApiController {
                                           @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);  // 페이지 정보 설정
 
-        Page<Post> postsPage = (search == null)
+        Page<PostResponse> postResponsePagePage = (search == null)
                 ? postService.getAllPosts(pageable)
                 : postService.searchPosts(search, pageable);
 
-        return postsPage.map(post -> post.toResponse());
-    }
-
-    private boolean isAdmin(String studentId) {
-        return postService.isAdmin(studentId);
+        return postResponsePagePage;
     }
 }
