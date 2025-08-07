@@ -46,14 +46,14 @@ public class PostApiController {
     }
 
     @GetMapping
-    public Page<PostResponse> getPostList(@RequestParam(required = false) String search,
+    public Page<PostResponse> getPostList(@RequestParam(required = false) String titleSearch,
                                           @RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);  // 페이지 정보 설정
 
-        Page<PostResponse> postResponsePagePage = (search == null)
+        Page<PostResponse> postResponsePagePage = (titleSearch == null)
                 ? postService.getAllPosts(pageable)
-                : postService.searchPosts(search, pageable);
+                : postService.searchPosts(titleSearch, pageable);
 
         return postResponsePagePage;
     }

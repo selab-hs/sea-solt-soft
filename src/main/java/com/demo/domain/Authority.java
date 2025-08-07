@@ -1,9 +1,6 @@
 package com.demo.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 /**
@@ -20,15 +17,21 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Authority {
+
     @Id
     @Column(name = "authority_name", length = 50)
-    private String authorityName;
+    @Enumerated(EnumType.STRING)  // Enum 값을 DB에 저장할 때 문자열로 저장하게 했습니다
+    private Role role;
 
-    public  Authority(String authorityName) {
-        this.authorityName = authorityName;
+    public Authority(Role role) {
+        this.role = role;
     }
 
-    public static Authority createRole(String roleName) {
-        return new Authority(roleName);
+    public static Authority createRole(Role role) {
+        return new Authority(role);
+    }
+
+    public String getAuthorityName() {
+        return role.name();  // Role enum 값을 문자열로 반환
     }
 }

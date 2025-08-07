@@ -47,12 +47,13 @@ public class Student {
     )
     private Set<Authority> authorities = new HashSet<>();
 
-    public void addRole(Authority authority) {
+    public void addAuthority(Authority authority) {
         this.authorities.add(authority);
     }
 
-    public void addAuthority(Authority authority) {
-        this.authorities.add(authority);
+    public boolean hasRoleAdmin() {
+        return this.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthorityName().equals("ROLE_ADMIN"));
     }
 
     @Builder(access = AccessLevel.PRIVATE)
@@ -94,10 +95,5 @@ public class Student {
                 .userId(this.loginId)
                 .password(this.password)
                 .build();
-    }
-
-    public boolean hasRoleAdmin() {
-        return this.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthorityName().equals("ROLE_ADMIN"));
     }
 }

@@ -43,11 +43,7 @@ public class PostService {
         Student student = studentRepository.findByLoginId(studentId)
                 .orElseThrow(() -> new NotFoundStudentException("학생을 찾을 수 없습니다"));
 
-        if (student == null) {
-            throw new NotFoundStudentException("학생 정보가 없습니다");
-        }
-
-        Post post = Post.createPost(request.getTitle(), request.getContent(), request.getDescription(), student);
+        Post post = new Post(request.getTitle(), request.getContent(), request.getDescription(), student);
         postRepository.save(post);
 
         return post.toResponse();
@@ -80,6 +76,6 @@ public class PostService {
         Student student = studentRepository.findByLoginId(studentId)
                 .orElseThrow(() -> new NotFoundStudentException("학생을 찾을 수 없습니다."));
 
-        return !student.hasRoleAdmin();
+        return student.hasRoleAdmin();
     }
 }

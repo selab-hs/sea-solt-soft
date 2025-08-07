@@ -50,13 +50,11 @@ public class Post {
         this.description = request.getDescription();
     }
 
-    public static Post createPost(String title, String content, String description, Student student) {
-        Post post = new Post();
-        post.title = title;
-        post.content = content;
-        post.description = description;
-        post.student = student;
-        return post;
+    public Post(String title, String content, String description, Student student) {
+        this.title = title;
+        this.content = content;
+        this.description = description;
+        this.student = student;
     }
 
     public PostResponse toResponse() {
@@ -68,12 +66,5 @@ public class Post {
                 this.createdAt != null ? this.createdAt.toString() : null,
                 this.updatedAt != null ? this.updatedAt.toString() : null
         );
-    }
-
-    public Post(String title, String content, String description, Student student) {
-        this.title = title;
-        this.content = content;
-        this.description = description;
-        this.student = student;
     }
 }

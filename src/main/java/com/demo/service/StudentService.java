@@ -26,23 +26,17 @@ public class StudentService {
         Student entity = Student.toEntity(studentCreateRequest);
         log.info("Student information: {}", entity);
 
-        assignRoleBasedOnLoginId(entity, studentCreateRequest.getUserId());
+        assignRole(entity, "ROLE_USER");
 
         studentRepository.save(entity);
 
         return entity.toResponse();
     }
 
-    private void assignRoleBasedOnLoginId(Student entity, String loginId) {
-        Authority authority;
-        if ("admin".equals(loginId)) {
-            authority = authorityRepository.findByAuthorityName("ROLE_ADMIN")
-                    .orElseThrow(() -> new RuntimeException("관리자 권한이 존재하지 않습니다."));
-        } else {
-            authority = authorityRepository.findByAuthorityName("ROLE_USER")
-                    .orElseThrow(() -> new RuntimeException("사용자 권한이 존재하지 않습니다."));
-        }
-        entity.addAuthority(authority);
+    private void assignRole(Student entity, String roleName) {
+        Authority authority = authorityRepository.findByAuthorityName(roleName)
+                .orElseThrow(() -> new RuntimeException(roleName + " 권한이 존재하지 않습니다."));
+        entity.addAuthority(Authority.createRole(authority.getRole()));
     }
 
     @Transactional(readOnly = true)
@@ -77,5 +71,12 @@ public class StudentService {
                     "요청한 사용자를 찾을 수 없습니다."
             );
         }
+    }
+
+    public void assignAdminRole(String studentId) {
+        Student student = studentRepository.findByLoginId(studentId)
+                .orElseThrow(() -> new NotFoundStudentException("학생을 찾을 수 없습니다."));
+
+        assignRole(student, "ROLE_ADMIN");
     }
 }
