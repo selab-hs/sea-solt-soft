@@ -51,9 +51,9 @@ public class Student {
         this.authorities.add(authority);
     }
 
-    public boolean hasRoleAdmin() {
+    public boolean hasRole(Role role) {
         return this.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthorityName().equals("ROLE_ADMIN"));
+                .noneMatch(authority -> authority.getRole().equals(role));
     }
 
     @Builder(access = AccessLevel.PRIVATE)

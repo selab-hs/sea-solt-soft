@@ -58,13 +58,6 @@ public class Post {
     }
 
     public PostResponse toResponse() {
-        return new PostResponse(
-                this.id,
-                this.title,
-                this.content,
-                this.description,
-                this.createdAt != null ? this.createdAt.toString() : null,
-                this.updatedAt != null ? this.updatedAt.toString() : null
-        );
+        return PostResponse.fromPost(this);
     }
 }

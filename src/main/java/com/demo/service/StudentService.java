@@ -1,6 +1,7 @@
 package com.demo.service;
 
 import com.demo.domain.Authority;
+import com.demo.domain.Role;
 import com.demo.exception.dto.ErrorMessage;
 import com.demo.exception.student.NotFoundStudentException;
 import com.demo.repository.AuthorityRepository;
@@ -26,17 +27,17 @@ public class StudentService {
         Student entity = Student.toEntity(studentCreateRequest);
         log.info("Student information: {}", entity);
 
-        assignRole(entity, "ROLE_USER");
+        assignRole(entity, Role.ROLE_USER);
 
         studentRepository.save(entity);
 
         return entity.toResponse();
     }
 
-    private void assignRole(Student entity, String roleName) {
-        Authority authority = authorityRepository.findByAuthorityName(roleName)
-                .orElseThrow(() -> new RuntimeException(roleName + " 권한이 존재하지 않습니다."));
-        entity.addAuthority(Authority.createRole(authority.getRole()));
+    public void assignRole(Student entity, Role role) {
+        Authority authority = authorityRepository.findByRole(role)
+                .orElseThrow(() -> new RuntimeException(role.name() + " 권한이 존재하지 않습니다."));
+        entity.addAuthority(authority);
     }
 
     @Transactional(readOnly = true)
@@ -71,12 +72,5 @@ public class StudentService {
                     "요청한 사용자를 찾을 수 없습니다."
             );
         }
-    }
-
-    public void assignAdminRole(String studentId) {
-        Student student = studentRepository.findByLoginId(studentId)
-                .orElseThrow(() -> new NotFoundStudentException("학생을 찾을 수 없습니다."));
-
-        assignRole(student, "ROLE_ADMIN");
     }
 }
