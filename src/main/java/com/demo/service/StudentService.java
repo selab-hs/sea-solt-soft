@@ -1,6 +1,7 @@
 package com.demo.service;
 
 import com.demo.domain.Authority;
+import com.demo.domain.Role;
 import com.demo.exception.dto.ErrorMessage;
 import com.demo.exception.student.NotFoundStudentException;
 import com.demo.repository.AuthorityRepository;
@@ -11,7 +12,6 @@ import com.demo.dto.response.StudentResponse;
 import com.demo.dto.request.StudentUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,14 +24,20 @@ public class StudentService {
 
     @Transactional
     public StudentResponse create(StudentCreateRequest studentCreateRequest) {
-        Student entity = Student.toEntity(studentCreateRequest);   //id 값이 없는 상태
-        log.info(entity.toString());
-        Authority authority = authorityRepository.findByAuthorityName("ROLE_USER").get();
-        entity.addAuthority(authority);
+        Student entity = Student.toEntity(studentCreateRequest);
+        log.info("Student information: {}", entity);
 
-        studentRepository.save(entity); //저장하면서 id값을 데이터베이스에서 생성해준다.
+        assignRole(entity, Role.ROLE_USER);
+
+        studentRepository.save(entity);
 
         return entity.toResponse();
+    }
+
+    public void assignRole(Student entity, Role role) {
+        Authority authority = authorityRepository.findByRole(role)
+                .orElseThrow(() -> new RuntimeException(role.name() + " 권한이 존재하지 않습니다."));
+        entity.addAuthority(authority);
     }
 
     @Transactional(readOnly = true)

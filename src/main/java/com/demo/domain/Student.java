@@ -47,6 +47,15 @@ public class Student {
     )
     private Set<Authority> authorities = new HashSet<>();
 
+    public void addAuthority(Authority authority) {
+        this.authorities.add(authority);
+    }
+
+    public boolean hasRole(Role role) {
+        return this.getAuthorities().stream()
+                .noneMatch(authority -> authority.getRole().equals(role));
+    }
+
     @Builder(access = AccessLevel.PRIVATE)
     public Student(String name, Long studentNumber, String phoneNumber, String loginId, String password, String email) {
         this.name = name;
@@ -86,9 +95,5 @@ public class Student {
                 .userId(this.loginId)
                 .password(this.password)
                 .build();
-    }
-
-    public void addAuthority(Authority authority) {
-        this.authorities.add(authority);
     }
 }
