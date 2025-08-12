@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final StudentRepository studentRepository;
 
+    @Transactional
     public PostResponse getPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다"));
@@ -30,16 +32,19 @@ public class PostService {
         return post.toResponse();
     }
 
+    @Transactional
     public Page<PostResponse> getAllPosts(Pageable pageable) {
         return postRepository.findAll(pageable)
                 .map(Post::toResponse);
     }
 
+    @Transactional
     public Page<PostResponse> searchPosts(String search, Pageable pageable) {
         return postRepository.findByTitleContaining(search, pageable)
                 .map(Post::toResponse);
     }
 
+    @Transactional
     public PostResponse createPost(PostCreateRequest request, String studentId) {
         Student student = studentRepository.findByLoginId(studentId)
                 .orElseThrow(() -> new NotFoundStudentException("학생을 찾을 수 없습니다"));
@@ -50,6 +55,7 @@ public class PostService {
         return post.toResponse();
     }
 
+    @Transactional
     public PostResponse updatePost(Long postId, PostUpdateRequest request, String studentId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다"));
@@ -65,6 +71,7 @@ public class PostService {
         return post.toResponse();
     }
 
+    @Transactional
     public void deletePost(Long postId, String studentId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다"));

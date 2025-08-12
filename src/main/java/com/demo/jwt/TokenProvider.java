@@ -48,7 +48,7 @@ public class TokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        claims.put("auth", roles);
+        claims.put(AUTHORITIES_KEY, roles);
 
         Date now = new Date();
         Date expiry = new Date(now.getTime() + ACCESS_TOKEN_VALIDATE_HOUR);
@@ -62,24 +62,53 @@ public class TokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        log.debug("[TokenProvider] getAuthentication({})", token);
-        Claims claims = Jwts
-                .parserBuilder()
-                .setSigningKey(KEY)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            Claims claims = Jwts
+                    .parserBuilder()
+                    .setSigningKey(KEY)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        // 클레임에서 권한 정보 추출 및 GrantedAuthority 객체로 변환
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+            // 클레임에서 권한 정보 추출 및 GrantedAuthority 객체로 변환
+            Collection<? extends GrantedAuthority> authorities = extractAuthorities(claims);
 
-        User principal = new User(claims.getSubject(), "", authorities);
-        log.info(principal.toString());
-        log.debug("[TokenProvider] Authentication principal created: Subject={}, Authorities={}", claims.getSubject(), authorities);
+            User principal = new User(claims.getSubject(), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+            return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid JWT token", e);
+        }
+    }
+
+    private Collection<? extends GrantedAuthority> extractAuthorities(Claims claims) {
+        Object authoritiesObj = claims.get(AUTHORITIES_KEY);
+
+        if (authoritiesObj == null) {
+            return Collections.emptyList();
+        }
+
+        if (authoritiesObj instanceof List) {
+            return ((List<?>) authoritiesObj).stream()
+                    .map(Object::toString)
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+        }
+
+        String authoritiesStr = authoritiesObj.toString();
+
+        // 대괄호 제거 (예: "[ROLE_USER]" -> "ROLE_USER")
+        authoritiesStr = authoritiesStr.replaceAll("^\\[|\\]$", "");
+
+        if (authoritiesStr.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return Arrays.stream(authoritiesStr.split(","))
+                .map(String::trim)
+                .filter(role -> !role.isEmpty())
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 }
