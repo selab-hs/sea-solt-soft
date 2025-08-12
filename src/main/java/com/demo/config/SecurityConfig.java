@@ -70,12 +70,13 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(request -> {
                     request
-                            .requestMatchers("/error", "/favicon.ico").permitAll()
+
                             .requestMatchers("/api/v1/auth/login", "api/v1/auth/register").permitAll() //권한 없이도 요청 가능한 API
                             .requestMatchers("/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
-                            .requestMatchers("/api/v1/students/**").hasAnyRole("ADMIN", "USER")
                             .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // 관리자(ADMIN) 역할을 가진 사용자만 접근 가능
                             .requestMatchers("/api/v1/posts/**").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers("/api/v1/students/**").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers("/error", "/favicon.ico").permitAll()
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
