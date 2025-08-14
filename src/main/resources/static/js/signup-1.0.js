@@ -1,12 +1,14 @@
-// signup-1.0.js - 회원가입 폼 처리 스크립트 (백엔드 DTO에 맞춰 필드명 수정 완료)
-let isIdChecked = false; // 아이디 중복 확인 여부 플래그
-let lastCheckedId = "";  // 마지막으로 확인한 아이디 저장
+// signup-1.0.js
 
+let isIdChecked = false;
+let lastCheckedId = "";
+
+// ====== 1) 아이디 중복 확인 (loginId 파라미터 사용) ======
 document.getElementById('checkIdBtn').addEventListener('click', async function () {
-  const userId = document.getElementById('username').value.trim();
+  const loginId = document.getElementById('username').value.trim();
   const message = document.getElementById('checkIdMessage');
 
-  if (!userId) {
+  if (!loginId) {
     message.textContent = '아이디를 입력해주세요.';
     message.style.color = 'red';
     isIdChecked = false;
@@ -14,14 +16,15 @@ document.getElementById('checkIdBtn').addEventListener('click', async function (
   }
 
   try {
-    const res = await fetch(`http://localhost:8080/api/v1/auth/check-id?userId=${encodeURIComponent(userId)}`);
+    // 상대경로 사용
+    const res = await fetch(`/api/v1/auth/check-id?loginId=${encodeURIComponent(loginId)}`);
     if (res.ok) {
       const data = await res.json();
       if (data.available) {
         message.textContent = '사용 가능한 아이디입니다.';
         message.style.color = 'green';
         isIdChecked = true;
-        lastCheckedId = userId;
+        lastCheckedId = loginId;
       } else {
         message.textContent = '이미 사용 중인 아이디입니다.';
         message.style.color = 'red';
@@ -40,6 +43,7 @@ document.getElementById('checkIdBtn').addEventListener('click', async function (
   }
 });
 
+// ====== 2) 회원가입 제출 ======
 document.getElementById('signupForm').addEventListener('submit', async function (event) {
   event.preventDefault();
 
@@ -56,41 +60,34 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     message.textContent = '모든 항목을 입력해주세요.';
     return;
   }
-
   if (password !== confirmPassword) {
     message.textContent = '비밀번호가 일치하지 않습니다.';
     return;
   }
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     message.textContent = '올바른 이메일 형식을 입력하세요.';
     return;
   }
-
   if (password.length < 8) {
     message.textContent = '비밀번호는 최소 8자 이상이어야 합니다.';
     return;
   }
-
   const phoneRegex = /^010\d{7,8}$/;
   if (!phoneRegex.test(phone)) {
     message.textContent = '전화번호는 010으로 시작하고 하이픈 없이 숫자만 입력하세요.';
     return;
   }
-
-  // 아이디 중복 확인 여부 검사
   if (!isIdChecked || lastCheckedId !== loginId) {
     message.textContent = '아이디 중복 확인을 먼저 해주세요.';
     return;
   }
 
   try {
-    const res = await fetch('http://localhost:8080/api/v1/auth/register', {
+    // 상대경로 사용 + 바디 필드명 백엔드에 맞춤 (loginId / studentId / phone)
+    const res = await fetch('/api/v1/auth/register', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name,
         studentNumber: studentId,
@@ -120,11 +117,9 @@ document.getElementById('signupForm').addEventListener('submit', async function 
   }
 });
 
-// 전화번호 숫자만 입력 & 11자리 제한
+// ====== 3) 전화번호 숫자만, 11자리 제한 ======
 document.getElementById('phone').addEventListener('input', function () {
   let value = this.value.replace(/[^0-9]/g, '');
-  if (value.length > 11) {
-    value = value.slice(0, 11);
-  }
+  if (value.length > 11) value = value.slice(0, 11);
   this.value = value;
 });

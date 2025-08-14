@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>SE LAB | 게시글 상세</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- 공통 스타일/JS -->
+    <link rel="stylesheet" href="/css/mainpage-1.0.css" />
+    <script defer src="/js/mainpage-1.0.js"></script>
+
+    <!-- 상세 전용 스타일 -->
+    <link rel="stylesheet" href="/css/post-details.css" />
+</head>
+<body>
+<div class="page-wrapper">
+    <!-- 헤더 -->
+    <div class="top-section">
+        <div class="logo-center">
+            <img src="/images/main-logo.svg" alt="SE LAB 로고" class="logo-img" />
+            <span class="logo-text">SE LAB</span>
+        </div>
+        <div class="menu-toggle" id="menuToggle">☰</div>
+        <nav class="main-nav" id="mainNav">
+            <a href="/posts">목록</a>
+            <a href="#">메뉴 2</a>
+            <a href="#">메뉴 3</a>
+        </nav>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- 본문 -->
+    <main class="main-content">
+        <div class="detail-head">
+            <a class="btn" href="/posts">← 목록</a>
+            <div class="spacer"></div>
+            <button id="btn-edit" class="btn ghost">수정</button>
+            <button id="btn-del" class="btn danger">삭제</button>
+        </div>
+
+        <article class="post-card">
+            <h1 id="title" class="post-title">(제목)</h1>
+            <div class="meta">
+                <span>작성자: <strong id="writer">-</strong></span>
+                <span class="dot">·</span>
+                <span>작성일: <strong id="createdAt">-</strong></span>
+            </div>
+            <div id="content" class="post-content"></div>
+        </article>
+    </main>
+
+    <footer class="main-footer">ⓒ 2025 SE LAB. All rights reserved.</footer>
+</div>
+
+<!-- 전역 API + 상세 로직 -->
+<script defer src="/js/apiClient.js"></script>
+<script defer src="/js/post-details.js"></script>
+</body>
+</html>

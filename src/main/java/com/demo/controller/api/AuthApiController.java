@@ -5,18 +5,18 @@ import com.demo.dto.request.LoginRequest;
 import com.demo.dto.request.StudentCreateRequest;
 import com.demo.jwt.TokenProvider;
 //import com.demo.repository.StudentRepository;
+import com.demo.dto.response.PostWithUserNameResponse;
 import com.demo.service.StudentService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -54,14 +54,12 @@ public class AuthApiController {
         return ResponseEntity.ok(response);
     }
 
-    /* 아이디 중복 확인 API 만들어봤는데 한번확인해주시면 감사하겠습니다.
+
     @GetMapping("/check-id")
-    public ResponseEntity<?> checkLoginId(@RequestParam String userId) {
-        boolean exists = studentRepository.existsByLoginId(userId);
-
-        Map<String, Boolean> result = new HashMap<>();
-        result.put("available", !exists); // true = 사용 가능
-
-        return ResponseEntity.ok(result);
-    }*/
+    public ResponseEntity<?> checkId(@RequestParam String loginId){
+        if(studentService.ixExistLoginId(loginId)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        return ResponseEntity.ok().build();
+    }
 }

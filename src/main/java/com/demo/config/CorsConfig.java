@@ -21,7 +21,8 @@ public class CorsConfig {
       config.addAllowedOriginPattern("*");
       config.addAllowedHeader("*");
       config.addAllowedMethod("*");
-
+      //id중복테스트
+      config.addExposedHeader("Authorization");
       source.registerCorsConfiguration("/api/v1/**", config);
       return new CorsFilter(source);
    }

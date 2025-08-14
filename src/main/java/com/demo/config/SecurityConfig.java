@@ -26,7 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
-
+import org.springframework.web.cors.CorsUtils;
 
 @Slf4j
 @EnableWebSecurity
@@ -71,12 +71,23 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> {
                     request
 
+
+
+                            .requestMatchers("/posts", "/posts/*", "/posts/*/edit").permitAll()
                             .requestMatchers("/error", "/favicon.ico").permitAll()
                             .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register").permitAll() //권한 없이도 요청 가능한 API
                             .requestMatchers("/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
                             .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // 관리자(ADMIN) 역할을 가진 사용자만 접근 가능
                             .requestMatchers("/api/v1/posts/**").hasAnyRole("ADMIN", "USER")
                             .requestMatchers("/api/v1/students/**").hasAnyRole("ADMIN", "USER")
+
+                           // id 중복체크
+                            .requestMatchers("/api/v1/auth/check-id").permitAll()
+                            // 뷰 컨트롤러 추가 시 URL 추가
+                            .requestMatchers("/", "/sign-in","/sign-up","/posts", "/posts/new","posts/*/edit").permitAll()
+                            .requestMatchers("/js/**", "/css/**", "/images/**").permitAll()
+                            // CORS 프리플라이트 허용 (import org.springframework.web.cors.CorsUtils;)
+                            .requestMatchers(org.springframework.web.cors.CorsUtils::isPreFlightRequest).permitAll()
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
