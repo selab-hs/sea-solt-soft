@@ -9,6 +9,7 @@ import com.demo.service.StudentService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -66,8 +67,8 @@ public class AuthApiController {
     @GetMapping("/check-id")
     public ResponseEntity<?> checkId(@RequestParam String loginId){
         if(studentService.ixExistLoginId(loginId)) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
     }
 }
