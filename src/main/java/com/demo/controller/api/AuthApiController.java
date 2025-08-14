@@ -13,10 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -64,4 +62,12 @@ public class AuthApiController {
 
         return ResponseEntity.ok(result);
     }*/
+
+    @GetMapping("/check-id")
+    public ResponseEntity<?> checkId(@RequestParam String loginId){
+        if(studentService.ixExistLoginId(loginId)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
