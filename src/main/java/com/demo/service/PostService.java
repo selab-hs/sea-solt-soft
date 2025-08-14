@@ -6,6 +6,7 @@ import com.demo.domain.Post;
 import com.demo.dto.request.PostCreateRequest;
 import com.demo.dto.request.PostUpdateRequest;
 import com.demo.dto.response.PostResponse;
+import com.demo.dto.response.PostWithUserNameResponse;
 import com.demo.exception.student.NotFoundStudentException;
 import com.demo.exception.post.PostNotFoundException;
 import com.demo.exception.post.UnauthorizedAccessException;
@@ -33,15 +34,14 @@ public class PostService {
     }
 
     @Transactional
-    public Page<PostResponse> getAllPosts(Pageable pageable) {
-        return postRepository.findAll(pageable)
-                .map(Post::toResponse);
+    public Page<PostWithUserNameResponse> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable).map(PostWithUserNameResponse::toResponse);
     }
 
     @Transactional
-    public Page<PostResponse> searchPosts(String search, Pageable pageable) {
+    public Page<PostWithUserNameResponse> searchPosts(String search, Pageable pageable) {
         return postRepository.findByTitleContaining(search, pageable)
-                .map(Post::toResponse);
+                .map(PostWithUserNameResponse::toResponse);
     }
 
     @Transactional
