@@ -5,6 +5,7 @@ import com.demo.dto.request.PostCreateRequest;
 import com.demo.dto.request.PostUpdateRequest;
 import com.demo.dto.response.PostResponse;
 import com.demo.domain.Post;
+import com.demo.dto.response.PostWithUserNameResponse;
 import com.demo.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,13 +66,13 @@ public class PostApiController {
     }
 
     @GetMapping
-    public Page<PostResponse> getPostList(@RequestParam(required = false) String titleSearch,
+    public Page<PostWithUserNameResponse> getPostList(@RequestParam(required = false) String titleSearch,
                                           @RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);  // 페이지 정보 설정
         log.info("Fetching post list: Search Query: {}, Page: {}, Size: {}", titleSearch, page, size);
 
-        Page<PostResponse> postPage = (titleSearch == null)
+        Page<PostWithUserNameResponse> postPage = (titleSearch == null)
                 ? postService.getAllPosts(pageable)
                 : postService.searchPosts(titleSearch, pageable);
 
