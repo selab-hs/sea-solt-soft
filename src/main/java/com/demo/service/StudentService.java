@@ -73,4 +73,9 @@ public class StudentService {
             );
         }
     }
+
+    @Transactional(readOnly = true)
+    public boolean ixExistLoginId(String loginId){
+        return studentRepository.existsByLoginId(loginId);
+    }
 }
