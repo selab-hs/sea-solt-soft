@@ -26,10 +26,18 @@
         if (!payload) return null;
         return payload.sub || payload.loginId || payload.userId || payload.username || null;
     }
+
+    // ✅ 새 패턴(/posts/edit/{id}) 인식 (필요시 옛 패턴도 함께 인식하려면 주석 해제)
     function getId() {
-        const m = location.pathname.match(/\/posts\/(\d+)\/edit/);
-        return m ? m[1] : null;
+        // 새 패턴
+        let m = location.pathname.match(/^\/posts\/edit\/(\d+)\/?$/);
+        if (m) return m[1];
+        // // 옛 패턴(호환용)
+        // m = location.pathname.match(/^\/posts\/(\d+)\/edit\/?$/);
+        // if (m) return m[1];
+        return null;
     }
+
     function getOwnerLoginIdFromPost(data) {
         if (data?.student?.loginId) return data.student.loginId;
         if (data?.student?.userId)  return data.student.userId;
@@ -47,7 +55,8 @@
     const id = getId();
     if (!getToken?.()) {
         alert('로그인이 필요한 기능입니다.\n로그인 페이지로 이동합니다.');
-        location.replace(`/sign-in?redirect=${encodeURIComponent(`/posts/${id}/edit`)}`);
+        // ✅ 새 경로로 redirect 유지
+        location.replace(`/sign-in?redirect=${encodeURIComponent(`/posts/edit/${id}`)}`);
         return;
     }
 
@@ -93,7 +102,8 @@
 
         if (!getToken?.()) {
             alert('세션이 만료되었습니다.\n다시 로그인해 주세요.');
-            location.replace(`/sign-in?redirect=${encodeURIComponent(`/posts/${id}/edit`)}`);
+            // ✅ 새 경로로 redirect 유지
+            location.replace(`/sign-in?redirect=${encodeURIComponent(`/posts/edit/${id}`)}`);
             return;
         }
 
@@ -115,7 +125,7 @@
             if (resp.status === 401) { alert('로그인이 필요합니다.'); location.href = '/sign-in'; return; }
             if (resp.status === 403) { alert('본인이 작성한 글만 수정할 수 있습니다.'); return; }
             if (resp.status === 404) { alert('존재하지 않는 게시글입니다.'); location.replace('/posts'); return; }
-            if (resp.status >= 500){ alert('다른 사용자의 글은 수정할 수 없습니다.'); return; } // ← 변경
+            if (resp.status >= 500){ alert('다른 사용자의 글은 수정할 수 없습니다.'); return; }
             if (!resp.ok) {
                 const t = await resp.text().catch(() => '');
                 throw new Error(t || '수정 실패');

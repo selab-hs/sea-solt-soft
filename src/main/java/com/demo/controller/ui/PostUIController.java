@@ -20,7 +20,7 @@ public class PostUIController {
         return "/post/post-create";
     }
 
-    @RequestMapping("/posts/{id}/edit")
+    @RequestMapping("/posts/edit/{id}")
     public String postEdit(@PathVariable Long id) {
         // id를 수정 페이지에 전달하고 싶으면 Model에 담아서 넘길 수도 있음
         return "/post/post-update";

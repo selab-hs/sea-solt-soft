@@ -68,7 +68,7 @@
             data.studentLoginId ||
             data.authorLoginId ||
             data.userLoginId ||
-            data.userId ||                                             // 평면 키
+            data.userId ||                                           // 평면 키
             null
         );
     }
@@ -127,11 +127,11 @@
     if ($btnEdit) $btnEdit.addEventListener('click', (e) => {
         const id = getId(); if (!id) return;
 
-        // 1) 비로그인
+        // 1) 비로그인 → 로그인으로 (새 패턴으로 redirect 유지)
         if (!getToken?.()) {
             e.preventDefault();
             alert('로그인이 필요한 기능입니다.\n로그인 페이지로 이동합니다.');
-            location.href = `/sign-in?redirect=${encodeURIComponent(`/posts/${id}/edit`)}`;
+            location.href = `/sign-in?redirect=${encodeURIComponent(`/posts/edit/${id}`)}`;
             return;
         }
 
@@ -142,14 +142,14 @@
             return;
         }
 
-        // 3) 그 외엔 이동 (소유자정보 불명 → 수정페이지에서 한 번 더 서버로 검증)
-        location.href = `/posts/${id}/edit`;
+        // 3) 수정 페이지로 이동 (새 패턴)
+        location.href = `/posts/edit/${id}`;
     });
 
     if ($btnDel) $btnDel.addEventListener('click', async (e) => {
         const id = getId(); if (!id) return;
 
-        // 비로그인
+        // 비로그인 → 상세로 돌아오도록 유지(기존 동작)
         if (!getToken?.()) {
             e.preventDefault();
             alert('로그인이 필요한 기능입니다.\n로그인 페이지로 이동합니다.');
@@ -172,7 +172,6 @@
         if (resp.status === 401) { alert('로그인이 필요합니다.'); location.href = '/sign-in'; return; }
         if (resp.status === 403) { alert('본인이 작성한 글만 삭제할 수 있습니다.'); return; }
         if (resp.status === 404) { alert('이미 삭제되었거나 존재하지 않는 게시글입니다.'); return; }
-        if (resp.status >= 500){ alert('다른 사용자의 글은 삭제할 수 없습니다.'); return; } // ← 변경
         if (!resp.ok)          { alert('삭제에 실패했습니다.'); return; }
 
         alert('삭제되었습니다.');

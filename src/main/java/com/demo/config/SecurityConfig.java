@@ -73,7 +73,7 @@ public class SecurityConfig {
                     request
                             // UI 라우트: 비로그인 허용
                             .requestMatchers("/", "/sign-in", "/sign-up").permitAll()
-                            .requestMatchers("/posts", "/posts/*", "/posts/*/edit").permitAll()
+                            .requestMatchers("/posts", "/posts/*", "/posts/edit/*").permitAll()
                             .requestMatchers("/js/**", "/css/**", "/images/**", "/favicon.ico", "/error").permitAll()
 
                             //  API 조회는 비로그인 허용
