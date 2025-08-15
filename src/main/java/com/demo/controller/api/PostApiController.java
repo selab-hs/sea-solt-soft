@@ -1,10 +1,8 @@
 package com.demo.controller.api;
 
-import com.demo.domain.Student;
 import com.demo.dto.request.PostCreateRequest;
 import com.demo.dto.request.PostUpdateRequest;
 import com.demo.dto.response.PostResponse;
-import com.demo.domain.Post;
 import com.demo.dto.response.PostWithUserNameResponse;
 import com.demo.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -38,10 +33,11 @@ public class PostApiController {
         return response;
     }
 
+    // 상세 조회 반환 타입을 PostWithUserNameResponse로 변경
     @GetMapping("/{postId}")
-    public PostResponse getPost(@PathVariable Long postId) {
+    public PostWithUserNameResponse getPost(@PathVariable Long postId) {
         log.info("Fetching post with ID: {}", postId);
-        PostResponse response = postService.getPost(postId);
+        PostWithUserNameResponse response = postService.getPost(postId);
         log.info("Post fetched successfully: Post ID: {}", postId);
         return response;
     }
@@ -67,9 +63,9 @@ public class PostApiController {
 
     @GetMapping
     public Page<PostWithUserNameResponse> getPostList(@RequestParam(required = false) String titleSearch,
-                                          @RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "20") int size) {
-        Pageable pageable = PageRequest.of(page, size);  // 페이지 정보 설정
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "20") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         log.info("Fetching post list: Search Query: {}, Page: {}, Size: {}", titleSearch, page, size);
 
         Page<PostWithUserNameResponse> postPage = (titleSearch == null)
