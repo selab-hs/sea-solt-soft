@@ -51,9 +51,14 @@ public class Student {
         this.authorities.add(authority);
     }
 
+    /**
+     * 권한 보유 여부 반환
+     * 기존 구현은 noneMatch를 사용해 "권한이 없을 때 true"가 되는 역동작이었음.
+     * → anyMatch로 수정하여 "권한이 있을 때 true"가 되도록 정상화.
+     */
     public boolean hasRole(Role role) {
         return this.getAuthorities().stream()
-                .noneMatch(authority -> authority.getRole().equals(role));
+                .anyMatch(authority -> authority.getRole().equals(role)); // <-- 수정: noneMatch -> anyMatch
     }
 
     @Builder(access = AccessLevel.PRIVATE)
