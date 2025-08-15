@@ -71,24 +71,23 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(request -> {
                     request
-
-
-
+                            // UI 라우트: 비로그인 허용
+                            .requestMatchers("/", "/sign-in", "/sign-up").permitAll()
                             .requestMatchers("/posts", "/posts/*", "/posts/*/edit").permitAll()
-                            .requestMatchers("/error", "/favicon.ico").permitAll()
-                            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register").permitAll() //권한 없이도 요청 가능한 API
-                            .requestMatchers("/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
-                            .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // 관리자(ADMIN) 역할을 가진 사용자만 접근 가능
-                            .requestMatchers(HttpMethod.POST, "/api/v1/posts").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/api/v1/auth/check-id").permitAll()
-                            .requestMatchers("/api/v1/students/**").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers("/js/**", "/css/**", "/images/**", "/favicon.ico", "/error").permitAll()
 
-                           // id 중복체크
-                            .requestMatchers("/api/v1/auth/check-id").permitAll()
-                            // 뷰 컨트롤러 추가 시 URL 추가
-                            .requestMatchers("/", "/sign-in","/sign-up","/posts", "/posts/new","posts/*/edit").permitAll()
-                            .requestMatchers("/js/**", "/css/**", "/images/**").permitAll()
-                            // CORS 프리플라이트 허용 (import org.springframework.web.cors.CorsUtils;)
+                            //  API 조회는 비로그인 허용
+                            .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
+
+                            //  API 쓰기 작업은 인증 필요
+                            .requestMatchers(HttpMethod.POST,   "/api/v1/posts/**").authenticated()
+                            .requestMatchers(HttpMethod.PUT,    "/api/v1/posts/**").authenticated()
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/posts/**").authenticated()
+
+                            // 나머지 기존 정책
+                            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/auth/check-id").permitAll()
+                            .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/api/v1/students/**").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(org.springframework.web.cors.CorsUtils::isPreFlightRequest).permitAll()
                             .anyRequest().authenticated();
                 })
