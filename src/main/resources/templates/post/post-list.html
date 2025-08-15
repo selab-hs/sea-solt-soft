@@ -7,8 +7,13 @@
 
     <!-- 공통 스타일/JS -->
     <link rel="stylesheet" href="/css/mainpage-1.0.css" />
+    <!-- 헤더/사이드 메뉴 등 공통 상호작용 스크립트 -->
     <script defer src="/js/mainpage-1.0.js"></script>
+
+    <!-- API 래퍼 (window.API.apiFetch 제공). post-list.js보다 먼저 로드되어야 함 -->
     <script defer src="/js/apiClient.js"></script>
+
+    <!-- 현재 페이지 전용 스크립트: 목록 조회/검색/페이징 -->
     <script defer src="/js/post-list.js"></script>
 
     <!-- 목록 전용 스타일 -->
@@ -22,57 +27,76 @@
             <img src="/images/main-logo.svg" alt="SE LAB 로고" class="logo-img" />
             <span class="logo-text">SE LAB</span>
         </div>
+
+        <!-- 햄버거 버튼(모바일 내비게이션 토글) -->
         <div class="menu-toggle" id="menuToggle">☰</div>
+
+        <!-- 메인 내비게이션: 서버 컨트롤러 라우트 사용 -->
         <nav class="main-nav" id="mainNav">
-            <!-- 변경: 정적 HTML 경로 → 컨트롤러 라우트 -->
+            <!-- 정적 파일 경로가 아닌, UI 컨트롤러 라우트(/posts)로 이동 -->
             <a href="/posts">목록</a>
             <a href="#">메뉴 2</a>
             <a href="#">메뉴 3</a>
         </nav>
     </div>
+
+    <!-- 모바일 메뉴가 열릴 때 뒤 배경 클릭 차단용 오버레이 -->
     <div class="overlay" id="overlay"></div>
 
     <!-- 메인 콘텐츠 -->
     <main class="main-content">
         <h1 class="page-title">게시글 목록</h1>
 
+        <!-- 검색/작성 버튼 영역 -->
         <div class="post-toolbar">
+            <!-- 검색 폼: 제목으로 검색. post-list.js에서 submit 이벤트 캡처 -->
             <form id="search-form" class="post-search">
                 <input name="q" id="q" placeholder="제목 검색" />
                 <button type="submit" class="btn primary">검색</button>
+                <!-- 입력 초기화 + 첫 페이지로 이동 -->
                 <button type="button" id="btn-reset" class="btn">초기화</button>
             </form>
+
             <div class="spacer"></div>
-            <!-- 변경: 버튼 → a 태그로 즉시 이동 보장 -->
+
+            <!-- 새 글 작성: a 태그로 즉시 이동 보장(/posts/new) -->
             <a id="btn-new" class="btn ghost" href="/posts/new">새 글 작성</a>
         </div>
 
+        <!-- 목록 테이블 -->
         <div class="table-wrap">
+            <!-- aria-label로 스크린리더에 테이블 의미 제공 -->
             <table id="list" aria-label="게시글 목록" class="post-table">
                 <thead>
                 <tr>
                     <th class="col-id">ID</th>
                     <th>제목</th>
+                    <!-- 작성자/작성일은 응답 필드(authorName/username, createdAt)와 매핑 -->
                     <th class="col-writer">작성자</th>
                     <th class="col-date">작성일</th>
-                    <th class="col-actions">관리</th>
+                    <!-- 관리 열 제거 -->
                 </tr>
                 </thead>
+                <!-- post-list.js에서 동적으로 렌더링 -->
                 <tbody></tbody>
             </table>
+
+            <!-- 검색 결과 없음 표시: items.length === 0 일 때만 보임 -->
             <div id="empty" class="empty" style="display:none">검색 결과가 없습니다.</div>
         </div>
 
+        <!-- 간단한 이전/다음 페이저: 서버 페이징 응답(number, totalPages, first, last)와 연동 -->
         <div class="paginator">
             <button id="prev" class="btn">이전</button>
+            <!-- 현재 페이지 / 전체 페이지 표시 -->
             <span id="page-info" class="muted"></span>
             <button id="next" class="btn">다음</button>
         </div>
     </main>
 
+    <!-- 푸터 -->
     <footer class="main-footer">ⓒ 2025 SE LAB. All rights reserved.</footer>
 </div>
-
 
 </body>
 </html>

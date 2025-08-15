@@ -1,3 +1,4 @@
+.hidden { display:none !important; }
 /* 메인 컬러 계열 맞춤 */
 :root {
     --purple: #6a0dad;

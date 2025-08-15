@@ -1,3 +1,4 @@
+.hidden { display: none !important; }
 :root {
     --purple: #6a0dad;
     --purple-dark: #4b0082;
