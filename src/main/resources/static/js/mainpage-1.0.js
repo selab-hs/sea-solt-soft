@@ -1,27 +1,77 @@
-// DOM이 완전히 로드된 후 실행
+// /js/mainpage-1.0.js
+// - 네비 렌더링/토글 로직 동일
+// - 토큰은 Authorization 키만 사용
+
 document.addEventListener('DOMContentLoaded', () => {
-  // 요소 참조 가져오기
-  const toggleBtn = document.getElementById('menuToggle'); // 햄버거 버튼
-  const nav = document.getElementById('mainNav');          // 네비게이션 메뉴
-  const overlay = document.getElementById('overlay');      // 배경 오버레이
+  const toggleBtn = document.getElementById('menuToggle');
+  const nav       = document.getElementById('mainNav');
+  const overlay   = document.getElementById('overlay');
 
-  // [1] 햄버거 버튼 클릭 시: 메뉴 열기 / 닫기 + 배경 어둡게 토글
-  toggleBtn.addEventListener('click', () => {
-    nav.classList.toggle('active');       // 메뉴 열림/닫힘 클래스 토글
-    overlay.classList.toggle('active');   // 배경 오버레이 보이기/숨기기 토글
-  });
+  function getTokenSafe() {
+    try { return window.API?.getToken?.() || null; }
+    catch { return null; }
+  }
 
-  // [2] 배경 오버레이 클릭 시: 메뉴 닫기
-  overlay.addEventListener('click', () => {
-    nav.classList.remove('active');
-    overlay.classList.remove('active');
-  });
+  function isLoggedIn() {
+    const token = getTokenSafe();
+    return !!token;
+  }
 
-  // [3] 메뉴 항목 클릭 시: 메뉴 닫기 (모바일 UX 개선)
-  document.querySelectorAll('.main-nav a').forEach(link => {
-    link.addEventListener('click', () => {
+  function buildRedirectParam() {
+    const redirect = location.pathname + location.search;
+    try { return encodeURIComponent(redirect); }
+    catch { return encodeURIComponent('/posts'); }
+  }
+
+  function renderNav() {
+    if (!nav) return;
+
+    const loggedIn = isLoggedIn();
+    const redirect = buildRedirectParam();
+
+    const items = [{ href: '/posts', label: '목록' }];
+
+    if (!loggedIn) {
+      items.push(
+          { href: `/sign-in?redirect=${redirect}`, label: '로그인', id: 'nav-login' },
+          { href: '/sign-up',                      label: '회원가입', id: 'nav-signup' },
+      );
+    } else {
+      items.push({ href: '#', label: '로그아웃', id: 'nav-logout' });
+    }
+
+    nav.innerHTML = items
+        .map(i => `<a ${i.id ? `id="${i.id}"` : ''} href="${i.href}">${i.label}</a>`)
+        .join('');
+
+    const $logout = document.getElementById('nav-logout');
+    if ($logout) {
+      $logout.addEventListener('click', (e) => {
+        e.preventDefault();
+        try { window.API?.clearToken?.(); } catch {}
+        localStorage.removeItem('Authorization'); // ← key 통일
+        location.href = '/sign-in';
+      });
+    }
+
+    document.querySelectorAll('.main-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        nav.classList.remove('active');
+        overlay?.classList.remove('active');
+      });
+    });
+  }
+
+  renderNav();
+
+  if (toggleBtn && nav && overlay) {
+    toggleBtn.addEventListener('click', () => {
+      nav.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+    overlay.addEventListener('click', () => {
       nav.classList.remove('active');
       overlay.classList.remove('active');
     });
-  });
+  }
 });

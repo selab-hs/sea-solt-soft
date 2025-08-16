@@ -27,7 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
-
+import org.springframework.web.cors.CorsUtils;
 
 @Slf4j
 @EnableWebSecurity
@@ -71,14 +71,24 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(request -> {
                     request
+                            // UI 라우트: 비로그인 허용
+                            .requestMatchers("/", "/sign-in", "/sign-up").permitAll()
+                            .requestMatchers("/posts", "/posts/*", "/posts/edit/*").permitAll()
+                            .requestMatchers("/js/**", "/css/**", "/images/**", "/favicon.ico", "/error").permitAll()
 
-                            .requestMatchers("/error", "/favicon.ico").permitAll()
-                            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register").permitAll() //권한 없이도 요청 가능한 API
-                            .requestMatchers("/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
-                            .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // 관리자(ADMIN) 역할을 가진 사용자만 접근 가능
-                            .requestMatchers(HttpMethod.POST, "/api/v1/posts").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/api/v1/auth/check-id").permitAll()
+                            //  API 조회는 비로그인 허용
+                            .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
+
+                            //  API 쓰기 작업은 인증 필요
+                            .requestMatchers(HttpMethod.POST,   "/api/v1/posts/**").authenticated()
+                            .requestMatchers(HttpMethod.PUT,    "/api/v1/posts/**").authenticated()
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/posts/**").authenticated()
+
+                            // 나머지 기존 정책
+                            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/auth/check-id").permitAll()
+                            .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                             .requestMatchers("/api/v1/students/**").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(org.springframework.web.cors.CorsUtils::isPreFlightRequest).permitAll()
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {

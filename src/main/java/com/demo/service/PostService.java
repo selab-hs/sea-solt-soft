@@ -25,20 +25,21 @@ public class PostService {
     private final PostRepository postRepository;
     private final StudentRepository studentRepository;
 
-    @Transactional
-    public PostResponse getPost(Long postId) {
+    //  상세 조회는 작성자 이름이 포함된 DTO로 반환
+    @Transactional(readOnly = true)
+    public PostWithUserNameResponse getPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다"));
 
-        return post.toResponse();
+        return PostWithUserNameResponse.toResponse(post);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<PostWithUserNameResponse> getAllPosts(Pageable pageable) {
         return postRepository.findAll(pageable).map(PostWithUserNameResponse::toResponse);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<PostWithUserNameResponse> searchPosts(String search, Pageable pageable) {
         return postRepository.findByTitleContaining(search, pageable)
                 .map(PostWithUserNameResponse::toResponse);

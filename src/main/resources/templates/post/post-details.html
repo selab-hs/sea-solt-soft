@@ -1,0 +1,86 @@
+<!--
+  파일 목적: 게시글 상세 화면
+  구성: 공통 레이아웃(헤더/푸터) + 상세 본문(제목/작성자/작성일/내용) + 액션(수정/삭제)
+  주의:
+  - 하단에서 apiClient.js → post-details.js 순으로 defer 로드됩니다(선언 순서 중요).
+  - 본문 요소 id(title, writer, createdAt, content)는 post-details.js에서 사용하는 값과 일치해야 합니다.
+-->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>SE LAB | 게시글 상세</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- 공통 스타일/상호작용: 헤더, 메뉴 토글 등 공용 UI -->
+    <link rel="stylesheet" href="/css/mainpage-1.0.css" />
+    <script defer src="/js/mainpage-1.0.js"></script>
+
+    <!-- 상세 페이지 전용 스타일: 카드 레이아웃, 본문 가독성 등 -->
+    <link rel="stylesheet" href="/css/post-details.css" />
+</head>
+<body>
+<div class="page-wrapper">
+    <!-- 상단 헤더: 로고/내비게이션 -->
+    <div class="top-section">
+        <div class="logo-center">
+            <img src="/images/main-logo.svg" alt="SE LAB 로고" class="logo-img" />
+            <span class="logo-text">SE LAB</span>
+        </div>
+        <!-- 모바일 메뉴 토글 -->
+        <div class="menu-toggle" id="menuToggle">☰</div>
+        <!-- 서버 라우트로 이동하도록 구성 -->
+        <nav class="main-nav" id="mainNav">
+            <a href="/posts">목록</a>
+            <a href="#">메뉴 2</a>
+            <a href="#">메뉴 3</a>
+        </nav>
+    </div>
+
+    <!-- 오버레이: 모바일 메뉴 열림 시 배경 클릭 차단 -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- 본문 -->
+    <main class="main-content">
+        <!-- 상단 액션 바: 목록 이동 / 수정 / 삭제 -->
+        <div class="detail-head">
+            <!-- 단순 링크로 목록 복귀. 필요시 history.back() 버튼으로 변경 가능 -->
+            <a class="btn" href="/posts">← 목록</a>
+            <div class="spacer"></div>
+            <!-- post-details.js에서 클릭 핸들러 바인딩:
+                 - 수정: /posts/{id}/edit 이동(비로그인 시 로그인 가드 가능)
+                 - 삭제: DELETE /api/v1/posts/{id} 호출 후 목록으로 -->
+            <button id="btn-edit" class="btn ghost">수정</button>
+            <button id="btn-del" class="btn danger">삭제</button>
+        </div>
+
+        <!-- 상세 카드: 아래 id 값은 post-details.js에서 값 주입 대상 -->
+        <article class="post-card">
+            <!-- 제목: JS에서 textContent로 주입 -->
+            <h1 id="title" class="post-title">(제목)</h1>
+
+            <!-- 메타 정보: 작성자/작성일. JS가 각각 writer/createdAt을 채움 -->
+            <div class="meta">
+                <span>작성자: <strong id="writer">-</strong></span>
+                <span class="dot">·</span>
+                <span>작성일: <strong id="createdAt">-</strong></span>
+            </div>
+
+            <!-- 본문: JS에서 innerHTML로 <pre> 감싸 주입(개행 유지).
+                 XSS 방지를 위해 JS에서 escape 처리해야 함 -->
+            <div id="content" class="post-content"></div>
+        </article>
+    </main>
+
+    <!-- 하단 푸터 -->
+    <footer class="main-footer">ⓒ 2025 SE LAB. All rights reserved.</footer>
+</div>
+
+<!-- 전역 API → 페이지 로직 순서로 로드해야 함.
+     apiClient.js: window.API(apiFetch, getToken 등) 제공
+     post-details.js: /api/v1/posts/{id} 조회, 렌더링, 수정/삭제 핸들러 및 로그인 가드 처리 -->
+<script defer src="/js/apiClient.js"></script>
+<script defer src="/js/post-details.js"></script>
+</body>
+</html>

@@ -14,6 +14,7 @@ public class PostResponse {
     private String createdAt;    // 게시글 작성 시간
     private String updatedAt;    // 게시글 수정 시간
 
+
     public static PostResponse fromPost(com.demo.domain.Post post) {
         return new PostResponse(
                 post.getId(),

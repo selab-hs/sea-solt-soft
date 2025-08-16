@@ -1,0 +1,176 @@
+/* ==========================================================================
+   post-create.css — 글 작성 화면 전용 스타일
+   목표: 컴팩트하지만, 큰 화면(데스크탑/와이드)에서는 폼과 텍스트영역이 넉넉하게 커짐
+   ========================================================================== */
+
+:root {
+    /* 팔레트 */
+    --brand: #6a0dad;
+    --brand-600: #5a0ab9;
+    --brand-100: rgba(106, 13, 173, 0.08);
+    --text: #222;
+    --muted: #6b6b6b;
+    --line: #e6e6eb;
+    --white: #fff;
+
+    /* 모양/그림자 */
+    --radius-lg: 14px;
+    --radius-md: 10px;
+    --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 6px 24px rgba(62, 31, 117, 0.08);
+}
+
+/* 페이지 레이아웃: 가운데 정렬 + 큰 화면에서도 여백 유지 */
+.main-content {
+    max-width: 1920px;       /* ★ 변경: 상한 올려서 초와이드 지원 */
+    margin: 28px auto 48px;
+    padding: 0 24px;         /* 좌우 안전 여백 */
+}
+
+/* 타이틀 */
+.page-title {
+    margin: 4px 0 16px;
+    font-size: clamp(20px, 1.6vw, 26px);
+    font-weight: 700;
+    color: var(--brand);
+    letter-spacing: -0.2px;
+    position: relative;
+}
+.page-title::after {
+    content: "";
+    display: block;
+    width: 48px;
+    height: 3px;
+    background: var(--brand);
+    opacity: .22;
+    border-radius: 999px;
+    margin-top: 8px;
+}
+
+/* 카드형 폼
+   - width: 100% 안에서, 뷰포트에 따라 유연하게 확장
+   - clamp(min, preferred, max)로 넓게 성장 (기존 대비 2배 가까이 확대)
+*/
+.post-form {
+    /* ★ 변경: 훨씬 넓게 — 최소 960px, 기본 92vw, 최대 1600px */
+    width: min(100%, clamp(960px, 92vw, 1600px));
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 20px 20px 16px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow .2s ease, border-color .2s ease;
+}
+.post-form:focus-within {
+    border-color: var(--brand);
+    box-shadow: var(--shadow-md);
+}
+
+/* 라벨 */
+.post-form label {
+    display: block;
+    margin: 10px 0 12px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* 입력/텍스트영역
+   - 폰트와 패딩도 살짝 유동적으로(clamp) 성장
+*/
+.post-form input,
+.post-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 6px;
+    padding: clamp(10px, 0.8vw, 14px) clamp(12px, 1vw, 16px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    font-size: clamp(15px, 1vw + 12px, 18px);
+    color: var(--text);
+    background: #fafafa;
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.post-form input:focus,
+.post-form textarea:focus {
+    border-color: var(--brand);
+    background: #fff;
+    box-shadow: 0 0 0 4px var(--brand-100);
+}
+
+/* 텍스트영역 높이
+   - 작은 화면: 200px
+   - 큰 화면: 화면 높이에 비례해 더 넓게
+*/
+.post-form textarea {
+    min-height: clamp(200px, 34vh, 520px);
+    resize: vertical; /* 세로만 조절 */
+    line-height: 1.55;
+}
+
+/* 액션 영역 */
+.actions {
+    margin-top: 16px;
+    padding-top: 12px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    border-top: 1px dashed var(--line);
+}
+
+/* 버튼 공통 */
+.btn {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    background: var(--white);
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1;
+    transition: transform .06s ease, filter .12s ease, background .12s ease, border-color .12s ease;
+}
+.btn:hover { background: #f7f7fb; }
+.btn:active { transform: translateY(1px); }
+
+.btn.primary {
+    background: var(--brand);
+    color: #fff;
+    border-color: var(--brand);
+}
+.btn.primary:hover { filter: brightness(1.06); }
+.btn.primary:active { filter: brightness(0.98); }
+
+.btn:disabled,
+.btn[disabled] {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 520px) {
+    .main-content { margin-top: 20px; padding: 0 16px; }
+    .post-form { padding: 16px; width: 100%; } /* 모바일은 화면폭 꽉 채움 */
+    .actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .actions .btn { width: 100%; }
+}
+
+/* 초와이드 화면(예: 1600px 이상)에서 폼을 더 키우고 여백도 늘림 */
+@media (min-width: 1600px) {
+    .main-content { max-width: 2048px; }                 /* ★ 변경 */
+    .post-form { width: min(100%, 1680px); }             /* ★ 변경: 최대폭 더 확대 */
+    .post-form textarea { min-height: clamp(260px, 40vh, 640px); }
+}
+
+/* 사용자 환경설정: 모션 축소 */
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+}
