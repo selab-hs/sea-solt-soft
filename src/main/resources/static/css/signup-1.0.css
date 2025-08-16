@@ -1,4 +1,4 @@
-/* style.css */
+/* signup-1.0.css */
 
 
 .login-container {
@@ -43,16 +43,91 @@ button[type="submit"] {
   border-radius: 4px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease;
 }
 
 button[type="submit"]:hover {
-  background-color: #555;
+  background-color: #0d2ab0;
 }
 
-#signupMessage {
+/* [추가] 메시지 스타일 */
+.signup-msg {
   margin-top: 10px;
   color: red;
   text-align: center;
   font-size: 0.9em;
+}
+
+/* ------------------------------ */
+/* [수정] 줄바꿈 방지/정렬 개선    */
+/* ------------------------------ */
+
+:root {                /* [추가] 인풋/버튼 공통 높이 */
+  --control-h: 40px;
+}
+
+.field-row {           /* [수정] 인풋+버튼 한 줄 고정 레이아웃 */
+  display: flex;
+  align-items: stretch;   /* 동일 높이 */
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.field-row input {
+  flex: 1 1 auto;        /* 인풋이 남는 공간 차지 */
+  min-width: 0;
+  height: var(--control-h);  /* [추가] 동일 높이 고정 */
+}
+
+.field-row > button {
+  flex: 0 0 auto;
+  white-space: nowrap;      /* 버튼 텍스트 줄바꿈 방지 */
+}
+
+/* [수정] 아이디 중복확인 버튼 스타일 */
+.btn-idcheck {
+  height: var(--control-h);
+  padding: 0 12px;
+  border: 1px solid #1034d3;
+  background: #f5f8ff;
+  color: #1034d3;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-idcheck:hover,
+.btn-idcheck:focus {
+  background: #e9f0ff;
+  outline: none;
+}
+
+/* [수정] 비밀번호 보기/숨김 아이콘 버튼 */
+.icon-btn {
+  width: var(--control-h);
+  height: var(--control-h);
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.icon-btn:hover,
+.icon-btn:focus {
+  border-color: #1034d3;
+  outline: none;
+}
+
+/* [추가] 머티리얼 아이콘 크기 */
+.mi {
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* [수정] 중복확인 결과 보조문구 간격/색상 */
+.assistive-msg {
+  display: block;
+  color: #0077cc;
+  margin-top: -8px;
+  margin-bottom: 10px;
 }
