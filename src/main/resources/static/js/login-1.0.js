@@ -27,14 +27,12 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     });
 
     if (res.ok) {
-      let token = res.headers.get('Authorization');
-      if (token?.startsWith('Bearer ')) token = token.substring(7);
+      const headerToken = res.headers.get('Authorization');
+      if (headerToken) {
+        if (window.API?.setToken) window.API.setToken(headerToken);
+        else localStorage.setItem('Authorization', headerToken);
 
-      if (token) {
-        // 나머지 페이지들과 통일: accessToken 키 사용
-        localStorage.setItem('accessToken', token);
         alert('로그인 성공!');
-        // CRUD 흐름으로 이동
         window.location.replace('/posts');
       } else {
         message.textContent = '로그인 실패: 토큰이 존재하지 않습니다.';
@@ -51,8 +49,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     loginBtn.textContent = '로그인';
   }
 });
+
 //  회원가입 버튼 클릭 시 회원가입 페이지로 이동
-document.querySelector('.signup-button')
-    .addEventListener('click', () => {
+document.querySelector('.signup-button')?.addEventListener('click', () => {
   window.location.href = '/sign-up';
 });

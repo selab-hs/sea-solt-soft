@@ -9,9 +9,10 @@ let firstLoad = true;
 
 // ===== JWT 유틸 (새 글 작성 버튼 가드에만 사용) =====
 function getAccessToken() {
-    return window.API?.getToken?.() ?? localStorage.getItem('accessToken') ?? null;
+    return window.API?.getToken?.() ?? null; // ← Authorization 키만 사용
 }
-function decodeJwtPayload(token) {
+function decodeJwtPayload(tokenLike) {
+    const token = tokenLike?.startsWith('Bearer ') ? tokenLike.slice(7) : tokenLike;
     if (!token) return null;
     const parts = token.split('.');
     if (parts.length < 2) return null;
@@ -38,7 +39,7 @@ const newBtn    = document.getElementById('btn-new');
 // 새 글 작성 (비로그인/만료 → 로그인으로 안내)
 if (newBtn) {
     newBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // 우리가 이동 제어
+        e.preventDefault();
         const token   = getAccessToken();
         const payload = decodeJwtPayload(token);
         const notLoggedIn = !payload || (typeof payload.exp === 'number' && Date.now() >= payload.exp * 1000);
@@ -104,7 +105,6 @@ function renderRows(items) {
         </td>
         <td>${escapeHtml(writer)}</td>
         <td>${escapeHtml(createdAt)}</td>
-        <!-- 관리 열 제거 -->
       </tr>
     `;
     }).join('');
@@ -121,7 +121,7 @@ function renderPager(data) {
 // 데이터 로드
 async function load() {
     const params = new URLSearchParams({ page: state.page, size: PAGE_SIZE });
-    params.append('sort', 'id,desc');                 // 서버가 지원하면 최신순
+    params.append('sort', 'id,desc');
     if (state.q) params.append('titleSearch', state.q);
 
     const resp = await callApi(`/posts?${params.toString()}`);
@@ -134,7 +134,6 @@ async function load() {
 
     const data = await resp.json();
 
-    // 최초 진입 시 마지막 페이지로 자동 이동
     if (firstLoad) {
         firstLoad = false;
         const last = Math.max(0, (data.totalPages ?? 1) - 1);
@@ -146,7 +145,6 @@ async function load() {
 
     const rows = data.content || [];
 
-    // 비정상 페이지 보정
     if (rows.length === 0 && (data.totalPages ?? 1) > 0 && state.page > 0) {
         state.page = Math.min(state.page, (data.totalPages ?? 1) - 1);
         return load();
