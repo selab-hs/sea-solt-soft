@@ -1,0 +1,89 @@
+<!--
+  파일 목적: 게시글 수정 화면
+  구성: 공통 레이아웃(헤더/푸터) + 수정 폼(제목/내용) + 페이지 전용 스크립트
+
+  의존성/실행 순서:
+  - mainpage-1.0.js: 공통 UI(메뉴 토글 등)
+  - apiClient.js: window.API(apiFetch, getToken 등) 제공
+  - post-update.js: /posts/{id}/edit 경로에서 id 추출, 초기 로드(GET), 저장(PUT), 취소 이동 처리
+    ※ defer 특성상 선언된 순서대로 실행되므로 apiClient.js가 post-update.js보다 먼저 로드되어야 합니다.
+
+  주의:
+  - 이 페이지는 URL 패턴이 /posts/{id}/edit 이어야 post-update.js가 올바르게 id를 파싱합니다.
+  - 취소 버튼은 기본적으로 /posts 로 이동하지만, post-update.js에서 /posts/{id} 상세로 보내도록 가드할 수 있습니다.
+-->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>SE LAB | 글 수정</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- 공통 스타일/상호작용: 전체 레이아웃, 헤더/푸터, 메뉴 토글 등 -->
+    <link rel="stylesheet" href="/css/mainpage-1.0.css" />
+    <script defer src="/js/mainpage-1.0.js"></script>
+
+    <!-- 페이지 전용 스타일: 폼 배치/간격/버튼 정렬 -->
+    <link rel="stylesheet" href="/css/post-update.css" />
+</head>
+<body>
+<div class="page-wrapper">
+    <!-- 헤더: 로고/내비게이션 -->
+    <div class="top-section">
+        <div class="logo-center">
+            <img src="/images/main-logo.svg" alt="SE LAB 로고" class="logo-img" />
+            <span class="logo-text">SE LAB</span>
+        </div>
+        <!-- 모바일 메뉴 토글 -->
+        <div class="menu-toggle" id="menuToggle">☰</div>
+        <nav class="main-nav" id="mainNav">
+            <a href="/posts">목록</a>
+            <a href="#">메뉴 2</a>
+            <a href="#">메뉴 3</a>
+        </nav>
+    </div>
+
+    <!-- 오버레이: 모바일 메뉴 열림 시 배경 클릭 차단 -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- 본문 -->
+    <main class="main-content">
+        <h1 class="page-title">글 수정</h1>
+
+        <!--
+          수정 폼
+          - required, maxlength 등 1차 검증은 브라우저가 처리
+          - 서버 측 검증/권한은 컨트롤러 + SecurityConfig에서 처리
+          - 초깃값 로드 및 저장은 post-update.js가 담당
+        -->
+        <form id="form" class="post-form">
+            <label>제목
+                <input name="title" id="title" required maxlength="100" />
+            </label>
+
+            <label>내용
+                <textarea name="content" id="content" rows="10" required></textarea>
+            </label>
+
+            <!-- 액션: 취소/저장
+                 - 취소: 기본은 /posts 로 이동. post-update.js에서 /posts/{id}로 보내도록 가드 가능
+                 - 저장: submit 이벤트에서 PUT /api/v1/posts/{id} 요청 후 상세로 이동 -->
+            <div class="actions">
+                <a class="btn" id="btn-cancel" href="/posts">취소</a>
+                <button type="submit" id="btn-submit" class="btn primary">저장</button>
+            </div>
+        </form>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="main-footer">ⓒ 2025 SE LAB. All rights reserved.</footer>
+</div>
+
+<!-- 전역 API → 페이지 로직 순서로 로드해야 함.
+     apiClient.js: window.API 제공
+     post-update.js: id 파싱/초기 로드/저장/취소 동작 처리 -->
+<script defer src="/js/apiClient.js"></script>
+<script defer src="/js/post-update.js"></script>
+</body>
+</html>
